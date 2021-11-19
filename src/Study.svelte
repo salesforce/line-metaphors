@@ -12,7 +12,7 @@
 
 	const SVGWIDTH = 600;
 	const SVGHEIGHT = 400;
-	const PADDING = 20;
+	const PADDING = 10;
 
 	const PRESENTATIONTIME = 2000;
 	const NUMPOINTS = 10;
@@ -39,38 +39,58 @@
 	 */
 	let phase = 0;
 
+	let startTime;
+
 	function nextPhase() {
 		phase = phase+1;
-		drawMode = phase === 3;
-		if (phase === 1) {
-			if (steps[step].style === 'animate') {
-				lineLength.set(100, {duration: 0});
-				lineLength.set(0);
-			}
-			if (steps[step].style === 'points') {
-				points.set(0, {duration: 0});
-				points.set(NUMPOINTS+1);				
-			}
-			setTimeout(() => {
-				nextPhase();
-			}, PRESENTATIONTIME);
-		}
-		if (phase > 3) {
-			step += 1;
-			prepareStep(step);
-			console.log(`Step ${step}`);
-			phase = 0;
+		switch(phase) {
+			case 0:
+				break;
+			case 1:
+				if (steps[step].style === 'animate') {
+					lineLength.set(100, {duration: 0});
+					lineLength.set(0);
+				}
+				if (steps[step].style === 'points') {
+					points.set(0, {duration: 0});
+					points.set(NUMPOINTS+1);				
+				}
+				setTimeout(() => {
+					nextPhase();
+				}, PRESENTATIONTIME);
+			break;
+			case 2:
+				startTime = new Date();
+			break;
+			case 3:
+				drawMode = true;
+				let time = new Date();
+				steps[step].textTime = time-startTime;
+				startTime = time;
+			break;
+			default:
+				steps[step].drawTime = (new Date())-startTime;
+				console.log(steps[step]);
+				drawMode = false;
+				step += 1;
+				prepareStep(step);
+				console.log(`Step ${step}`);
+				phase = 0;
 		}
 	}
 
-	const xScale = scaleLinear([0, 100], [PADDING, SVGWIDTH-PADDING]);
-	const yScale = scaleLinear([0, 100], [SVGHEIGHT-PADDING, PADDING]);
+	const xScale = scaleLinear([0, 100], [PADDING, SVGWIDTH-3*PADDING]);
+	const yScale = scaleLinear([0, 100], [SVGHEIGHT-PADDING, 3*PADDING]);
 
 	let focusdata;
 	let refdata;
 	let userdata;
 
 	function prepareStep(step) {
+
+		steps[step].step = step;
+
+		console.log(steps[step]);
 
 		let max = (steps[step].metaphor === 'approach' || steps[step].metaphor === 'coverge')  ? 80 : 100;
 
@@ -113,7 +133,7 @@
 	}
 
 	function setDataPoint(e) {
-		let dataX = xScale.invert(e.offsetX);
+		let dataX = Math.min(xScale.invert(e.offsetX), 100);
 		let dataY = yScale.invert(e.offsetY);
 		dataY = Math.max(0, Math.min(100, dataY));
 		userdata[Math.round(dataX/10)].y = dataY;
@@ -156,18 +176,27 @@
 <Row>
 	<Col md="12">
 		<svg width={SVGWIDTH} height={SVGHEIGHT}>
+			<defs>
+				<marker id="arrowhead" markerWidth="10" markerHeight="7" 
+						refX="0" refY="3.5" orient="auto">
+					<polygon points="0 0, 10 3.5, 0 7" fill="steelblue" />
+				</marker>
+			</defs>
 			<rect x=0 y=0 width={SVGWIDTH} height={SVGHEIGHT} style={"fill:white;"}
 				on:mousedown={mouseDown} on:mouseup={mouseUp} on:mouseleave={mouseUp}
 				on:mousemove={mouseMove} />
-			<line x1={PADDING} y1={SVGHEIGHT-PADDING} x2={SVGWIDTH-PADDING} y2={SVGHEIGHT-PADDING} />
-			<line x1={PADDING} y1={PADDING} x2={PADDING} y2={SVGHEIGHT-PADDING} />
+			<line x1={2} y1={SVGHEIGHT-2} x2={SVGWIDTH-2} y2={SVGHEIGHT-2} />
+			<line x1={2} y1={2} x2={2} y2={SVGHEIGHT-2} />
 
 			{#if phase === 1 || phase === 3}
 				<path d={makePath(refdata)} class="reference" />
 			{/if}
 			{#if phase === 1 }
 				{#if steps[step].style !== 'points'}
-					<path d={makePath(focusdata)} pathLength=100 class="focus" style={`stroke-dasharray:100;stroke-dashoffset:${$lineLength};`} />
+					<path d={makePath(focusdata)} pathLength=100 class="focus"
+						style={`stroke-dasharray:100;stroke-dashoffset:${$lineLength};`}
+						marker-end={steps[step].style === 'arrow' ? 'url(#arrowhead)' : ''}/>
+
 				{:else}
 					{#each focusdata as p, i}
 						{#if i <= $points}
@@ -191,7 +220,7 @@
 {#if phase === 2 }
 	<Row>
 		<Col md="12">
-			Describe what you are seeing in the chart above:
+			Describe what you saw in the chart above:
 		</Col>
 	</Row>
 	<Row>
@@ -244,4 +273,9 @@
 	.reference {
 		stroke: darkgray;
 	}
+
+	svg {
+		margin-bottom: 1em;
+	}
+
 </style>

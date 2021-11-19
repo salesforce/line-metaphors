@@ -22,8 +22,9 @@
 	for (let m of metaphors) {
 		for (let s of styles) {
 			steps.push({
-				metaphor: m,
-				style: s
+				metaphor:	m,
+				style:		s,
+				id:			prolificID
 			});
 		}
 	}
