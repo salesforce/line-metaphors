@@ -184,11 +184,9 @@
 		<text x={SVGWIDTH/2} y={SVGHEIGHT/2+8} class="button">Ready</text>
 	{/if}
 
-	{#if phase === 1 || phase === 2}
+	{#if phase > 0}
 		<path d={makePath(refdata)} class="reference" />
-	{/if}
-	{#if phase === 1 || phase === 2 }
-		{#if step.style !== 'points'}
+		{#if step.style !== 'points' || phase === 2}
 			<path d={makePath(phase === 1 ? focusdata : userdata)} pathLength=100 class="focus"
 				style={`stroke-dasharray:100;stroke-dashoffset:${$lineLength};`}
 				marker-end={step.style === 'arrow' ? 'url(#arrowhead)' : ''}/>
@@ -196,7 +194,7 @@
 		{#if step.style === 'points' || phase === 2}
 			{#each (phase === 2 ? userdata : focusdata) as p, i}
 				{#if i <= $points || phase === 2}
-					<circle cx={xScale(p.x)} cy={yScale(p.y)} r=5 />
+					<circle cx={xScale(p.x)} cy={yScale(p.y)} r={phase === 1 ? 5 : 3} />
 				{/if}
 			{/each}
 		{/if}
