@@ -11,6 +11,7 @@
 	// const metaphors = ['converge']; //  'diverge',
 	// const styles = ['points'];
 
+	const ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	const studyCode = 'ABCDEFG';
 
 	/**
@@ -38,7 +39,7 @@
 			return results[1];
 	}
 
-	const prolificID = gup('PROLIFIC_PID') || 'UNKNOWN';
+	const prolificID = gup('PROLIFIC_PID') || 'TEST_'+[...new Array(5)].map(v => ALPHA[Math.floor(Math.random()*26)]).join('');
 
 	function post(message) {
 		fetch(url, {
