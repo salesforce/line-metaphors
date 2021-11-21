@@ -4,7 +4,12 @@
 	import { tweened } from 'svelte/motion';
 	import { linear, quadInOut } from 'svelte/easing';
 
+	import { createEventDispatcher } from 'svelte';
+
+	const dispatch = createEventDispatcher();
+
 	export let steps;
+	export let part;
 
 	let step = 0;
 
@@ -14,7 +19,7 @@
 	const SVGHEIGHT = 400;
 	const PADDING = 10;
 
-	const PRESENTATIONTIME = 2000;
+	const PRESENTATIONTIME = 3000;
 	const NUMPOINTS = 10;
 
 	const CONVERGEREF = [{"x":0,"y":"51.39"},{"x":10,"y":"59.44"},{"x":20,"y":"74.44"},{"x":30,"y":"69.44"},{"x":40,"y":"91.11"},{"x":50,"y":"78.33"},{"x":60,"y":"74.72"},{"x":70,"y":"96.11"},{"x":80,"y":"93.33"},{"x":90,"y":"99.44"},{"x":100,"y":"95.28"}];
@@ -73,9 +78,14 @@
 				console.log(steps[step]);
 				drawMode = false;
 				step += 1;
-				prepareStep(step);
-				console.log(`Step ${step}`);
-				phase = 0;
+				if (step < steps.length) {
+					prepareStep(step);
+					console.log(`Step ${step}`);
+					phase = 0;
+				} else {
+					dispatch('done');
+					console.log('Done');
+				}
 		}
 	}
 
@@ -122,7 +132,7 @@
 		userdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
 			return {
 				x: i*10,
-				y: 50
+				y: 0
 			};
 		});
 	}
@@ -174,7 +184,7 @@
 </script>
 
 <Row>
-	<Col md="12">
+	<Col sm="12">
 		<svg width={SVGWIDTH} height={SVGHEIGHT}>
 			<defs>
 				<marker id="arrowhead" markerWidth="10" markerHeight="7" 
@@ -191,15 +201,15 @@
 			{#if phase === 1 || phase === 3}
 				<path d={makePath(refdata)} class="reference" />
 			{/if}
-			{#if phase === 1 }
+			{#if phase === 1 || phase === 3 }
 				{#if steps[step].style !== 'points'}
-					<path d={makePath(focusdata)} pathLength=100 class="focus"
+					<path d={makePath(phase === 1 ? focusdata : userdata)} pathLength=100 class="focus"
 						style={`stroke-dasharray:100;stroke-dashoffset:${$lineLength};`}
 						marker-end={steps[step].style === 'arrow' ? 'url(#arrowhead)' : ''}/>
-
-				{:else}
-					{#each focusdata as p, i}
-						{#if i <= $points}
+				{/if}
+				{#if steps[step].style === 'points' || phase === 3}
+					{#each (phase === 3 ? userdata : focusdata) as p, i}
+						{#if i <= $points || phase === 3}
 							<circle cx={xScale(p.x)} cy={yScale(p.y)} r=5 />
 						{/if}
 					{/each}
@@ -212,41 +222,45 @@
 </Row>
 {#if phase === 0 }
 	<Row>
-		<Col md={{size: 1, offset: 5}}>
+		<Col sm={{size: 1, offset: 5}}>
 			<Button color="primary" on:click={nextPhase}>Ready!</Button>
 		</Col>
 	</Row>
 {/if}
 {#if phase === 2 }
 	<Row>
-		<Col md="12">
+		<Col sm="12">
 			Describe what you saw in the chart above:
 		</Col>
 	</Row>
 	<Row>
-		<Col md="12">
+		<Col sm="12">
 			<textarea id="answer" rows="5" cols="40" placeholder="Enter response here…"></textarea> 
 		</Col>
 	</Row>
 {:else if phase === 3}
 	<Row>
-		<Col md="12">
-			Recreate the chart you saw earlier to the best of your ability by dragging your mouse in the chart above.
+		<Col sm={{size: 10, offset: 1}}>
+			<p>Recreate the chart you saw earlier to the best of your ability <br> by dragging your mouse in the chart above.</p>
 		</Col>
 	</Row>
 {/if}
 {#if phase === 2 || phase === 3 }
 	<Row>
-		<Col md={{size: 1, offset: 5}}>
+		<Col sm={{size: 1, offset: 5}}>
 			<Button color="secondary" on:click={nextPhase}>Done</Button>
 		</Col>
 		{#if DEBUG && phase === 3}
-			<Col md={{size: 1, offset: 5}}>
+			<Col sm={{size: 1, offset: 5}}>
 				<Button color="secondary" outline on:click={savePoints}>Save Points</Button>
 			</Col>
 		{/if}
 	</Row>
 {/if}
+	<Row>
+		<Col sm="12">Part {part}, Step {step+1}/{steps.length}
+		</Col>
+	</Row>
 
 <style>
 	line {
@@ -264,6 +278,7 @@
 	circle {
 		fill: steelblue;
 		stroke: none;
+		pointer-events: none;
 	}
 
 	.focus {
@@ -276,6 +291,10 @@
 
 	svg {
 		margin-bottom: 1em;
+	}
+
+	p { 
+		text-align: left;
 	}
 
 </style>

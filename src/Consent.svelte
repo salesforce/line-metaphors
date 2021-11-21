@@ -1,7 +1,15 @@
 <script>
 	import { Row, Col, Button } from 'sveltestrap';
 
+	import { createEventDispatcher } from 'svelte';
+
+	const dispatch = createEventDispatcher();
+
 	export let prolificID;
+
+	function done() {
+		dispatch('done');
+	}
 
 </script>
 
@@ -38,7 +46,7 @@
 </Row>
 <Row>
 	<Col md={{size: 1, offset: 5}}>
-		<Button color="success">I Agree</Button>
+		<Button color='success' on:click={done}>I Agree</Button>
 	</Col>
 </Row>
 

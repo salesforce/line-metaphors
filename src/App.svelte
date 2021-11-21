@@ -1,13 +1,17 @@
 <script>
 	import Consent from './Consent.svelte';
 	import Study from './Study.svelte';
+	import ThankYou from './ThankYou.svelte';
+
 	import { Container } from 'sveltestrap';
 	import { shuffle } from 'd3-array';
 
 	const metaphors = ['cross', 'approach', 'converge']; //  'diverge',
 	const styles = ['plain', 'arrow', 'animate', 'points'];
+	// const metaphors = ['converge']; //  'diverge',
+	// const styles = ['points'];
 
-	let prolificID = 'XYZ';
+	const studyCode = 'ABCDEFG';
 
 	/**
 	 * 0 ... consent
@@ -17,6 +21,33 @@
 	 */
 	let stage = 1;
 
+	function nextStage() {
+		stage += 1;
+	}
+
+	// from Michael's truncation experiment code,
+	// slightly modified
+	function gup(name) {
+		let regexS = `[\\?&]${name}=([^&#]*)`;
+		let regex = new RegExp(regexS);
+		let tmpURL = window.location.href;
+		let results = regex.exec(tmpURL);
+		if (results == null)
+			return '';
+		else
+			return results[1];
+	}
+
+	const prolificID = gup('PROLIFIC_PID') || 'UNKNOWN';
+
+	function post(message) {
+		fetch(url, {
+			method: "POST",
+			headers: {'Content-Type': 'application/json'},
+			body: JSON.stringify(message.detail)
+		});
+	}
+	
 	let steps = [];
 
 	for (let m of metaphors) {
@@ -38,11 +69,13 @@
 <main>
 	<Container>
 		{#if stage === 0}
-			<Consent {prolificID} />
+			<Consent {prolificID} on:done={nextStage} />
 		{:else if stage === 1}
-			<Study {steps} />
+			<Study {steps} part="A" on:done={nextStage} on:post={post} />
+		{:else if stage === 2}
+			<Study {steps} part="B" on:done={nextStage} on:post={post} />
 		{:else if stage === 3}
-			<ThankYou {prolificID} />
+			<ThankYou {studyCode} />
 		{/if}
 	</Container>
 </main>
@@ -53,11 +86,5 @@
 		padding: 1em;
 		max-width: 240px;
 		margin: 0 auto;
-	}
-
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
 	}
 </style>
