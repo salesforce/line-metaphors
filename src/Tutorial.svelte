@@ -26,11 +26,11 @@
 	{/if}
 	<StudyCanvas step={{metaphor: 'approach', style: 'line'}} stepNum={1}
 		clear={part === 'B'} drawAfter={part === 'A'}
-		on:done={nextStep} />
+		on:renderDone={nextStep} />
 </Row>
 <Row>
 	<Col sm={{offset:4, size: 4}}>
-		<Button color="primary" disabled={!nextActive} on:click={() => dispatch('done')}>Start Tutorial</Button>
+		<Button color="primary" disabled={!nextActive} on:click={() => dispatch('done')}>Start Study</Button>
 	</Col>
 </Row>
 

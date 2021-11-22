@@ -8,7 +8,7 @@
 	import { Container } from 'sveltestrap';
 	import { shuffle } from 'd3-array';
 
-	const metaphors = ['cross', 'approach', 'converge']; //  'diverge',
+	const metaphors = ['cross'] //, 'approach', 'converge']; //  'diverge',
 	const styles = ['plain', 'arrow', 'animate', 'points'];
 	// const metaphors = ['converge']; //  'diverge',
 	// const styles = ['points'];
@@ -27,7 +27,7 @@
 	 * 5 ... Demographics
 	 * 6 ... Thank You!
 	 */
-	let stage = 2;
+	let stage = 0;
 
 	function nextStage() {
 		stage += 1;

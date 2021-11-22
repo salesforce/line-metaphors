@@ -17,6 +17,8 @@
 
 	let buttonActive = false;
 
+	let answer = '';
+
 	/**
 	 * 0 ... show stimulus
 	 * 1 ... wait for redraw
@@ -37,6 +39,7 @@
 				console.log(steps[step]);
 				step += 1;
 				buttonActive = false;
+				answer = '';
 				if (step < steps.length) {
 					console.log(`Step ${step}`);
 					phase = 0;
@@ -55,6 +58,11 @@
 			}
 		})));
 	}
+
+	$: {
+		buttonActive = answer.length > 20;
+	}
+
 </script>
 
 <Row>
@@ -80,7 +88,8 @@
 		</Row>
 		<Row>
 			<Col sm="12">
-				<textarea id="answer" rows="4" cols="60" placeholder="Enter response here…"></textarea> 
+				<textarea id="answer" rows="4" cols="60" placeholder="Enter response here…"
+					bind:value={answer}></textarea> 
 			</Col>
 		</Row>
 	{/if}
