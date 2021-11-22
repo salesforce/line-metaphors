@@ -15,6 +15,8 @@
 
 	let step = 0;
 
+	let buttonActive = false;
+
 	/**
 	 * 0 ... show stimulus
 	 * 1 ... wait for redraw
@@ -34,6 +36,7 @@
 				}
 				console.log(steps[step]);
 				step += 1;
+				buttonActive = false;
 				if (step < steps.length) {
 					console.log(`Step ${step}`);
 					phase = 0;
@@ -56,15 +59,17 @@
 
 <Row>
 	<Col sm="12">
-		<StudyCanvas step={steps[step]} stepNum={step} clear={false} drawAfter={true}
-			on:done={nextPhase} bind:userdata />
+		<StudyCanvas step={steps[step]} stepNum={step}
+			clear={part === 'B'} drawAfter={part === 'A'}
+			on:renderDone={nextPhase} on:redrawDone={() => buttonActive = true}
+			bind:userdata />
 	</Col>
 </Row>
 {#if phase === 1 }
 	{#if part === 'A'}
 		<Row>
 			<Col sm={{size: 10, offset: 1}}>
-				<p>Recreate the chart you saw earlier to the best of your ability <br> by dragging your mouse in the chart above.</p>
+				<p>Recreate the chart you just saw to the best of your ability <br> by dragging your mouse in the chart above.</p>
 			</Col>
 		</Row>
 	{:else}
@@ -75,7 +80,7 @@
 		</Row>
 		<Row>
 			<Col sm="12">
-				<textarea id="answer" rows="5" cols="40" placeholder="Enter response here…"></textarea> 
+				<textarea id="answer" rows="4" cols="60" placeholder="Enter response here…"></textarea> 
 			</Col>
 		</Row>
 	{/if}
@@ -83,7 +88,7 @@
 {#if phase === 1}
 	<Row>
 		<Col sm={{size: 1, offset: 5}}>
-			<Button color="secondary" on:click={nextPhase}>Done</Button>
+			<Button color="secondary" disabled={!buttonActive} on:click={nextPhase}>Done</Button>
 		</Col>
 		{#if DEBUG && phase === 3}
 			<Col sm={{size: 1, offset: 5}}>

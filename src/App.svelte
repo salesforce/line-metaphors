@@ -1,6 +1,8 @@
 <script>
 	import Consent from './Consent.svelte';
+	import Tutorial from './Tutorial.svelte';
 	import Study from './Study.svelte';
+	import Demographics from './Demographics.svelte';
 	import ThankYou from './ThankYou.svelte';
 
 	import { Container } from 'sveltestrap';
@@ -14,13 +16,18 @@
 	const ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	const studyCode = 'ABCDEFG';
 
+	const POST_URL = '/post.php';
+
 	/**
 	 * 0 ... consent
-	 * 1 ... study
-	 * 2 ... demographics?
-	 * 3 ... Thank You!
+	 * 1 ... Tutorial for Part A
+	 * 2 ... Study, Part A
+	 * 3 ... Tutorial for Part B
+	 * 4 ... Study, Part B
+	 * 5 ... Demographics
+	 * 6 ... Thank You!
 	 */
-	let stage = 1;
+	let stage = 2;
 
 	function nextStage() {
 		stage += 1;
@@ -42,7 +49,7 @@
 	const prolificID = gup('PROLIFIC_PID') || 'TEST_'+[...new Array(5)].map(v => ALPHA[Math.floor(Math.random()*26)]).join('');
 
 	function post(message) {
-		fetch(url, {
+		fetch(POST_URL, {
 			method: "POST",
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify(message.detail)
@@ -72,10 +79,16 @@
 		{#if stage === 0}
 			<Consent {prolificID} on:done={nextStage} />
 		{:else if stage === 1}
-			<Study {steps} part="A" on:done={nextStage} on:post={post} />
+			<Tutorial part="A" on:done={nextStage} />
 		{:else if stage === 2}
-			<Study {steps} part="B" on:done={nextStage} on:post={post} />
+			<Study {steps} part="A" on:done={nextStage} on:post={post} />
 		{:else if stage === 3}
+			<Tutorial part="B" on:done={nextStage} />
+		{:else if stage === 4}
+			<Study {steps} part="B" on:done={nextStage} on:post={post} />
+		{:else if stage === 5}
+			<Demographics {prolificID} on:done={nextStage} on:post={post} />
+		{:else if stage === 6}
 			<ThankYou {studyCode} />
 		{/if}
 	</Container>
@@ -87,5 +100,11 @@
 		padding: 1em;
 		max-width: 240px;
 		margin: 0 auto;
+	}
+
+	@media (min-width: 640px) {
+		main {
+			max-width: none;
+		}
 	}
 </style>

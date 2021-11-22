@@ -63,7 +63,7 @@
 			case 2:
 				drawMode = drawAfter;
 				step.time = new Date();
-				dispatch('done');
+				dispatch('renderDone');
 			break;
 		}
 	}
@@ -73,10 +73,13 @@
 
 	let focusdata;
 	let refdata;
+	let yZeros = 100;
+	let stepDone = false;
 
 	function prepareStep() {
 
 		phase = 0;
+		stepDone = false;
 		hover = false;
 
 		console.log(step);
@@ -126,6 +129,11 @@
 		let dataY = yScale.invert(e.offsetY);
 		dataY = Math.max(0, Math.min(100, dataY));
 		userdata[Math.round(dataX/10)].y = dataY;
+		yZeros = userdata.reduce((sum, v) => sum + (v.y === 0 ? 1 : 0), 0);
+		if (yZeros < 2 && !stepDone) {
+			dispatch('redrawDone');
+			stepDone = true;
+		}
 	}
 
 	let isDown = false;
@@ -147,15 +155,6 @@
 			setDataPoint(e);
 			// console.log(data);
 		}
-	}
-
-	function savePoints() {
-		console.log(JSON.stringify(userdata.map(d => {
-			return {
-				x: d.x,
-				y: d.y.toFixed(2)
-			}
-		})));
 	}
 
 	$: {
@@ -184,12 +183,12 @@
 		<text x={SVGWIDTH/2} y={SVGHEIGHT/2+8} class="button">Ready</text>
 	{/if}
 
-	{#if phase > 0}
+	{#if phase === 1 || (phase === 2 && !clear)}
 		<path d={makePath(refdata)} class="reference" />
 		{#if step.style !== 'points' || phase === 2}
 			<path d={makePath(phase === 1 ? focusdata : userdata)} pathLength=100 class="focus"
 				style={`stroke-dasharray:100;stroke-dashoffset:${$lineLength};`}
-				marker-end={step.style === 'arrow' ? 'url(#arrowhead)' : ''}/>
+				marker-end={(step.style === 'arrow' && phase === 1) ? 'url(#arrowhead)' : ''}/>
 		{/if}
 		{#if step.style === 'points' || phase === 2}
 			{#each (phase === 2 ? userdata : focusdata) as p, i}
@@ -198,8 +197,6 @@
 				{/if}
 			{/each}
 		{/if}
-	{:else if phase === 2}
-		<path d={makePath(userdata)} class="focus" />
 	{/if}
 </svg>
 
