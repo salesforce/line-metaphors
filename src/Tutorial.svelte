@@ -19,15 +19,18 @@
 	<Col sm="12">
 		<h1>Tutorial for Part {part}</h1>
 		{#if part === 'A'}
-			<p>In this part of the study, you will look at charts and then be asked to recreate them from memory.
+			<p>In the first part of the study, you will be shown charts and then be asked to describe them in a few sentences.
+				Please try to be specific about patterns and details you observe.</p>
+			<p>You will need to enter a minimum number of characters to be able to advance to the next question.</p>
+		{:else}
+			<p>In the second part of the study, you will be shown charts and then be asked to recreate them from memory.
 				The charts show the sales prices of two products, A and B, over time.
 			</p>
-		{:else}
-			<p>In this second part of the study, you will…</p>
+			<p>You will need to move all of the points in the chart in order to be able to advance to the next question.</p>
 		{/if}
 		<StudyCanvas step={{metaphor: 'approach', style: 'line'}} stepNum={1}
-			clear={part === 'B'} drawAfter={part === 'A'}
-			on:renderDone={nextStep} />
+			clear={part === 'A'} drawAfter={part === 'B'}
+			on:renderDone={part == 'A' ? nextStep : null} on:redrawDone={nextStep} />
 	</Col>
 </Row>
 <Row>
