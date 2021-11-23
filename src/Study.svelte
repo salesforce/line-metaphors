@@ -77,19 +77,26 @@
 	{#if part === 'A'}
 		<Row>
 			<Col sm={{size: 10, offset: 1}}>
-				<p>Recreate the chart you just saw to the best of your ability <br> by dragging your mouse in the chart above.</p>
+				<p>Recreate the <span class="blue">blue {steps[step].style === 'points' ? 'dots' : 'line'}</span> in the chart you just saw
+					to the best of your ability by dragging your mouse in the chart above. <br>
+					You will need to move every dot in order to proceed. </p>
 			</Col>
 		</Row>
 	{:else}
 		<Row>
 			<Col sm="12">
-				Describe what you saw in the chart above:
+				<p>Describe what you saw in the chart above:</p>
 			</Col>
 		</Row>
 		<Row>
 			<Col sm="12">
 				<textarea id="answer" rows="4" cols="60" placeholder="Enter response here…"
 					bind:value={answer}></textarea> 
+			</Col>
+		</Row>
+		<Row>
+			<Col>
+				<p>Type at least 25 characters to proceed.</p>
 			</Col>
 		</Row>
 	{/if}
@@ -114,6 +121,11 @@
 <style>
 	p { 
 		text-align: left;
+	}
+
+	.blue {
+		font-weight: bold;
+		color: steelblue;
 	}
 
 </style>

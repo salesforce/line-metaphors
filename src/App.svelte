@@ -26,7 +26,7 @@
 	 * 5 ... Demographics
 	 * 6 ... Thank You!
 	 */
-	let stage = 2;
+	let stage = 4;
 
 	function nextStage() {
 		stage += 1;
