@@ -68,13 +68,13 @@
 <Row>
 	<Col sm="12">
 		<StudyCanvas step={steps[step]} stepNum={step}
-			clear={part === 'B'} drawAfter={part === 'A'}
+			clear={part === 'A'} drawAfter={part === 'B'}
 			on:renderDone={nextPhase} on:redrawDone={() => buttonActive = true}
 			bind:userdata />
 	</Col>
 </Row>
 {#if phase === 1 }
-	{#if part === 'A'}
+	{#if part === 'B'}
 		<Row>
 			<Col sm={{size: 10, offset: 1}}>
 				<p>Recreate the <span class="blue">blue {steps[step].style === 'points' ? 'dots' : 'line'}</span> in the chart you just saw
