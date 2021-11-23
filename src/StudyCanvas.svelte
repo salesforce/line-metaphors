@@ -15,7 +15,7 @@
 
 	const SVGWIDTH = 600;
 	const SVGHEIGHT = 400;
-	const PADDING = 10;
+	const PADDING = 24;
 
 	const PRESENTATIONTIME = 3000;
 	const NUMPOINTS = 10;
@@ -173,8 +173,18 @@
 	<rect x=0 y=0 width={SVGWIDTH} height={SVGHEIGHT} style={"fill:white;"}
 		on:mousedown={mouseDown} on:mouseup={mouseUp} on:mouseleave={mouseUp}
 		on:mousemove={mouseMove} />
-	<line x1={2} y1={SVGHEIGHT-2} x2={SVGWIDTH-2} y2={SVGHEIGHT-2} />
-	<line x1={2} y1={2} x2={2} y2={SVGHEIGHT-2} />
+	<line x1={14} y1={SVGHEIGHT-14} x2={SVGWIDTH-14} y2={SVGHEIGHT-14} />
+	<line x1={14} y1={14} x2={14} y2={SVGHEIGHT-14} />
+
+	<line x1={SVGWIDTH-12} y1={SVGHEIGHT-14} x2={SVGWIDTH-22} y2={SVGHEIGHT-20} />
+	<line x1={SVGWIDTH-12} y1={SVGHEIGHT-14} x2={SVGWIDTH-22} y2={SVGHEIGHT-8} />
+	<text x={SVGWIDTH-63} y={SVGHEIGHT} class="axis">Time</text>
+
+	
+
+	<line x1={14} y1={14} x2={20} y2={24} />
+	<line x1={14} y1={14} x2={8} y2={24} />
+	<text transform="rotate(-90)" x={-68} y={12} class="axis">Sales</text>
 
 	{#if phase === 0}
 		<rect x={2*SVGWIDTH/5} y={2*SVGHEIGHT/5} width={SVGWIDTH/5} height={SVGHEIGHT/5} rx="10"
@@ -215,6 +225,10 @@
 		font-weight: bold;
 		text-anchor: middle;
 		pointer-events: none;
+	}
+
+	text.axis {
+		font-size: 12pt;
 	}
 
 	line {
