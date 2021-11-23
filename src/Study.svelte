@@ -60,7 +60,7 @@
 	}
 
 	$: {
-		buttonActive = answer.length > 20;
+		buttonActive = answer.length > 150;
 	}
 
 </script>
@@ -96,7 +96,7 @@
 		</Row>
 		<Row>
 			<Col>
-				<p>Type at least 25 characters to proceed.</p>
+				<p>Type at least 150 characters to proceed.</p>
 			</Col>
 		</Row>
 	{/if}
