@@ -8,8 +8,8 @@
 	import { Container } from 'sveltestrap';
 	import { shuffle } from 'd3-array';
 
-	const metaphors = ['converge', 'diverge'] //, 'approach', 'converge']; //  'diverge',
-	const styles = ['plain', 'arrow', 'animate', 'points'];
+	const metaphors = ['converge', 'diverge', 'cross'] //, 'approach', 'converge']; //  'diverge',
+	const styles = ['plain', 'arrow', 'animate']; // 'points'
 	// const metaphors = ['converge']; //  'diverge',
 	// const styles = ['points'];
 
