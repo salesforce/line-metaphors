@@ -69,7 +69,7 @@
 	}
 
 	const xScale = scaleLinear([0, 100], [PADDING, SVGWIDTH-3*PADDING]);
-	const yScale = scaleLinear([0, 100], [SVGHEIGHT-PADDING, 3*PADDING]);
+	const yScale = scaleLinear([0, 100], [SVGHEIGHT-1.5*PADDING, 3*PADDING]);
 
 	let focusdata;
 	let refdata;
@@ -173,14 +173,18 @@
 	<rect x=0 y=0 width={SVGWIDTH} height={SVGHEIGHT} style={"fill:white;"}
 		on:mousedown={mouseDown} on:mouseup={mouseUp} on:mouseleave={mouseUp}
 		on:mousemove={mouseMove} />
-	<line x1={14} y1={SVGHEIGHT-14} x2={SVGWIDTH-14} y2={SVGHEIGHT-14} />
-	<line x1={14} y1={14} x2={14} y2={SVGHEIGHT-14} />
+	<line x1={14} y1={SVGHEIGHT-PADDING/2-14} x2={SVGWIDTH-14} y2={SVGHEIGHT-PADDING/2-14} />
+	<line x1={14} y1={14} x2={14} y2={SVGHEIGHT-PADDING/2-14} />
 
-	<line x1={SVGWIDTH-12} y1={SVGHEIGHT-14} x2={SVGWIDTH-22} y2={SVGHEIGHT-20} />
-	<line x1={SVGWIDTH-12} y1={SVGHEIGHT-14} x2={SVGWIDTH-22} y2={SVGHEIGHT-8} />
-	<text x={SVGWIDTH-63} y={SVGHEIGHT} class="axis">Time</text>
+	<line x1={SVGWIDTH-12} y1={SVGHEIGHT-PADDING/2-14} x2={SVGWIDTH-22} y2={SVGHEIGHT-PADDING/2-20} />
+	<line x1={SVGWIDTH-12} y1={SVGHEIGHT-PADDING/2-14} x2={SVGWIDTH-22} y2={SVGHEIGHT-PADDING/2-8} />
+	<text x={SVGWIDTH-63} y={SVGHEIGHT-8} class="axis">Time</text>
 
-	
+	<line x1={SVGWIDTH/4-PADDING/2} y1={SVGHEIGHT-PADDING/4} x2={SVGWIDTH/4+PADDING/2} y2={SVGHEIGHT-PADDING/4} class="focus"  />
+	<text x={SVGWIDTH/4+PADDING/2+2} y={SVGHEIGHT-1} class="axis">Product A</text>
+
+	<line x1={SVGWIDTH/2-PADDING/2} y1={SVGHEIGHT-PADDING/4} x2={SVGWIDTH/2+PADDING/2} y2={SVGHEIGHT-PADDING/4} class="reference"  />
+	<text x={SVGWIDTH/2+PADDING/2+2} y={SVGHEIGHT-1} class="axis">Product B</text>
 
 	<line x1={14} y1={14} x2={20} y2={24} />
 	<line x1={14} y1={14} x2={8} y2={24} />
