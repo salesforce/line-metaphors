@@ -6,10 +6,9 @@
 
 	const dispatch = createEventDispatcher();
 
-	const DEBUG = true;
-
 	export let steps;
 	export let part;
+	export let DEBUG = false;
 
 	let userdata = [];
 

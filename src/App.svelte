@@ -15,6 +15,8 @@
 
 	const ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
+	const DEBUG = true;
+
 	const POST_URL = '/post.php';
 
 	/**
@@ -26,10 +28,15 @@
 	 * 5 ... Demographics
 	 * 6 ... Thank You!
 	 */
-	let stage = 2;
+	let stage = 0;
 
-	function nextStage() {
-		stage += 1;
+	function nextStage(message) {
+		if (Number.isInteger(message.detail)) {
+			stage = message.detail;
+		} else {
+			stage += 1;
+		}
+		console.log(stage);
 	}
 
 	// from Michael's truncation experiment code,
@@ -79,17 +86,17 @@
 <main>
 	<Container>
 		{#if stage === 0}
-			<Consent {prolificID} on:done={nextStage} />
+			<Consent {prolificID} on:done={nextStage} {DEBUG} />
 		{:else if stage === 1}
 			<Tutorial part="A" on:done={nextStage} />
 		{:else if stage === 2}
-			<Study {steps} part="A" on:done={nextStage} on:post={post} />
+			<Study {steps} part="A" on:done={nextStage} on:post={post} {DEBUG} />
 		{:else if stage === 3}
 			<Tutorial part="B" on:done={nextStage} />
 		{:else if stage === 4}
-			<Study {steps} part="B" on:done={nextStage} on:post={post} />
+			<Study {steps} part="B" on:done={nextStage} on:post={post} {DEBUG} />
 		{:else if stage === 5}
-			<Demographics {prolificID} on:done={nextStage} on:post={post} />
+			<Demographics {prolificID} on:done={nextStage} on:post={post} {DEBUG} />
 		{:else if stage === 6}
 			<ThankYou studyCode={studyID} />
 		{/if}

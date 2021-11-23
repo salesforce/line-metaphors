@@ -6,13 +6,20 @@
 	const dispatch = createEventDispatcher();
 
 	export let prolificID;
+	export let DEBUG = false;
 
-	function done() {
-		dispatch('done');
+	function done(next) {
+		dispatch('done', next);
 	}
 
 </script>
 
+{#if DEBUG}
+<Row>
+	<Col><Button on:click={() => done(2)}>Part A</Button><Button on:click={() => done(4)}>Part B</Button>
+	</Col>
+</Row>
+{/if}
 <Row>
 	<Col md="12">
 		<h1>Informed Consent</h1>
