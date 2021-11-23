@@ -34,9 +34,12 @@
 			case 1:
 				steps[step].time = (new Date())-steps[step].time;
 				if (part === 'A') {
+					steps[step].answer = answer.slice();
+				} else {
 					steps[step].userdata = userdata.slice();
 				}
-				console.log(steps[step]);
+				// console.log(steps[step]);
+				dispatch('post', steps[step]);
 				step += 1;
 				buttonActive = false;
 				answer = '';

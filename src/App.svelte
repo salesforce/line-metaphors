@@ -49,11 +49,12 @@
 	const studyID = gup('STUDY_ID') || 'UNKNOWN';
 
 	function post(message) {
-		fetch(POST_URL, {
-			method: "POST",
-			headers: {'Content-Type': 'application/json'},
-			body: JSON.stringify(message.detail)
-		});
+		console.log(`POST: ${JSON.stringify(message.detail)}`);
+		// fetch(POST_URL, {
+		// 	method: "POST",
+		// 	headers: {'Content-Type': 'application/json'},
+		// 	body: JSON.stringify(message.detail)
+		// });
 	}
 	
 	let steps = [];

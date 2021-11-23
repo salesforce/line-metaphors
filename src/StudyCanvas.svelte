@@ -18,17 +18,19 @@
 	const PADDING = 24;
 
 	const PRESENTATIONTIME = 3000;
+	const ANIM_TIME = 1000;
+	const ANIM_GAP = 200;
 	const NUMPOINTS = 10;
 
 	const CONVERGEREF = [{"x":0,"y":"51.39"},{"x":10,"y":"59.44"},{"x":20,"y":"74.44"},{"x":30,"y":"69.44"},{"x":40,"y":"91.11"},{"x":50,"y":"78.33"},{"x":60,"y":"74.72"},{"x":70,"y":"96.11"},{"x":80,"y":"93.33"},{"x":90,"y":"99.44"},{"x":100,"y":"95.28"}];
 
 	const lineLength = tweened(0, {
-		duration: 1000,
+		duration: ANIM_TIME,
 		easing: quadInOut
 	});
 
 	const points = tweened(0, {
-		duration: 1000,
+		duration: ANIM_TIME,
 		easing: linear
 	});
 
@@ -51,10 +53,18 @@
 				if (step.style === 'animate') {
 					lineLength.set(100, {duration: 0});
 					lineLength.set(0);
+					setTimeout(() => {
+						lineLength.set(100, {duration: 0});
+						lineLength.set(0);
+					}, ANIM_TIME+ANIM_GAP);
 				}
 				if (step.style === 'points') {
 					points.set(0, {duration: 0});
 					points.set(NUMPOINTS+1);				
+					setTimeout(() => {
+						points.set(0, {duration: 0});
+						points.set(NUMPOINTS+1);				
+					}, ANIM_TIME+ANIM_GAP);
 				}
 				setTimeout(() => {
 					nextPhase();
@@ -97,7 +107,7 @@
 			refdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
 				return {
 					x: i*100/NUMPOINTS,
-					y: Math.max(0, Math.min((10-i)*10+20-Math.random()*40, 100))
+					y: Math.max(0, Math.min(90+10-Math.random()*20, 100))
 				};
 			});
 		} else if (step.metaphor === 'approach') {
