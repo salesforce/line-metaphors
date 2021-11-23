@@ -45,7 +45,7 @@
 	</Col>
 </Row>
 <Row>
-	<Col md={{size: 1, offset: 5}}>
+	<Col sm={{size: 4, offset: 4}}>
 		<Button color='success' on:click={done}>I Agree</Button>
 	</Col>
 </Row>

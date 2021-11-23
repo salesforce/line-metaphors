@@ -14,7 +14,6 @@
 	// const styles = ['points'];
 
 	const ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	const studyCode = 'ABCDEFG';
 
 	const POST_URL = '/post.php';
 
@@ -27,7 +26,7 @@
 	 * 5 ... Demographics
 	 * 6 ... Thank You!
 	 */
-	let stage = 0;
+	let stage = 2;
 
 	function nextStage() {
 		stage += 1;
@@ -47,6 +46,7 @@
 	}
 
 	const prolificID = gup('PROLIFIC_PID') || 'TEST_'+[...new Array(5)].map(v => ALPHA[Math.floor(Math.random()*26)]).join('');
+	const studyID = gup('STUDY_ID') || 'UNKNOWN';
 
 	function post(message) {
 		fetch(POST_URL, {
@@ -70,6 +70,7 @@
 
 	shuffle(steps);
 
+	console.log(`StudyID: ${studyID}, userID: ${prolificID}`);
 	console.log(steps);
 
 </script>
@@ -89,7 +90,7 @@
 		{:else if stage === 5}
 			<Demographics {prolificID} on:done={nextStage} on:post={post} />
 		{:else if stage === 6}
-			<ThankYou {studyCode} />
+			<ThankYou studyCode={studyID} />
 		{/if}
 	</Container>
 </main>
