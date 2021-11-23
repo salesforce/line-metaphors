@@ -95,30 +95,62 @@
 		console.log(step);
 
 		let max = (step.metaphor === 'approach' || step.metaphor === 'coverge')  ? 80 : 100;
-
 		focusdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
-			return {
-				x: i*100/NUMPOINTS,
-				y: Math.max(0, Math.min(i*(max/NUMPOINTS)+20-Math.random()*40, max))
-			};
-		});
-
+				return { x: i*100/NUMPOINTS, y: 0 } });
+		
 		if (step.metaphor === 'cross') {
+			const offset = 50+Math.random()*40;
 			refdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
 				return {
 					x: i*100/NUMPOINTS,
-					y: Math.max(0, Math.min(90+10-Math.random()*20, 100))
+					y: Math.max(0, Math.min(offset+10-Math.random()*20, 100))
 				};
 			});
-		} else if (step.metaphor === 'approach') {
+
+			let crossed = false;
+			for (let i = 0; i < NUMPOINTS+1; i += 1) {
+				do {
+					focusdata[i].y = Math.max(0, Math.min(i*(max/NUMPOINTS)+20-Math.random()*40, max));
+				} while (crossed && focusdata[i].y <= refdata[i].y);
+				crossed = (focusdata[i].y >= refdata[i].y);
+			}
+		} else {
+			const offset = 20+Math.random()*30;
+			console.log(`offset: ${offset}`);
+			const slope = (100-offset)/100;
 			refdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
 				return {
 					x: i*100/NUMPOINTS,
-					y: 90
+					y: Math.max(0, Math.min(offset+(i*100/NUMPOINTS)*slope+10-Math.random()*20, 100))
 				};
 			});
-		} else if (step.metaphor === 'converge') {
-			refdata = CONVERGEREF;
+			let minDist = 20;
+			let maxDist = 50;
+
+			if (step.metaphor === 'converge') {
+				let minDistSlope = minDist/12;
+				let maxDistSlope = maxDist/12;
+				for (let i = 0; i < NUMPOINTS+1; i += 1) {
+					focusdata[i].y = Math.max(0, refdata[i].y-minDist-Math.random()*(maxDist-minDist));
+					minDist -= minDistSlope;
+					maxDist -= maxDistSlope;
+				}
+			} else {
+				let touchIndex = 5+Math.floor(Math.random()*3);
+				let minDistSlope = minDist/(touchIndex+1);
+				let maxDistSlope = maxDist/(touchIndex+1);
+				for (let i = 0; i < touchIndex; i += 1) {
+					focusdata[i].y = Math.max(0, refdata[i].y-minDist-Math.random()*(maxDist-minDist));
+					minDist -= minDistSlope;
+					maxDist -= maxDistSlope;
+				}
+				for (let i = touchIndex; i < NUMPOINTS+1; i += 1) {
+					focusdata[i].y = Math.max(0, refdata[i].y-minDist-Math.random()*(maxDist-minDist));
+					minDist += minDistSlope;
+					maxDist += maxDistSlope;
+				}
+
+			}
 		}
 
 		userdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
@@ -231,6 +263,10 @@
 
 	rect.button.hover {
 		fill: #36704B;
+	}
+
+	text {
+		user-select: none;
 	}
 
 	text.button {
