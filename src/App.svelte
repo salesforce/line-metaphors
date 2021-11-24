@@ -15,7 +15,7 @@
 
 	const ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-	const DEBUG = true;
+	const DEBUG = window.location.href.includes('localhost');
 
 	const POST_URL = '/post.php';
 
