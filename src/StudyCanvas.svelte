@@ -17,9 +17,9 @@
 	const SVGHEIGHT = 400;
 	const PADDING = 24;
 
-	const PRESENTATIONTIME = 3000;
+	const PRESENTATIONTIME = 5000;
 	const ANIM_TIME = 1000;
-	const ANIM_GAP = 200;
+	const ANIM_GAP = 500;
 	const NUMPOINTS = 10;
 
 	const CONVERGEREF = [{"x":0,"y":"51.39"},{"x":10,"y":"59.44"},{"x":20,"y":"74.44"},{"x":30,"y":"69.44"},{"x":40,"y":"91.11"},{"x":50,"y":"78.33"},{"x":60,"y":"74.72"},{"x":70,"y":"96.11"},{"x":80,"y":"93.33"},{"x":90,"y":"99.44"},{"x":100,"y":"95.28"}];
@@ -58,6 +58,10 @@
 						lineLength.set(100, {duration: 0});
 						lineLength.set(0);
 					}, ANIM_TIME+ANIM_GAP);
+					setTimeout(() => {
+						lineLength.set(100, {duration: 0});
+						lineLength.set(0);
+					}, 2*ANIM_TIME+2*ANIM_GAP);
 				}
 				if (step.style === 'points') {
 					points.set(0, {duration: 0});
@@ -66,6 +70,10 @@
 						points.set(0, {duration: 0});
 						points.set(NUMPOINTS+1);				
 					}, ANIM_TIME+ANIM_GAP);
+					setTimeout(() => {
+						points.set(0, {duration: 0});
+						points.set(NUMPOINTS+1);				
+					}, 2*ANIM_TIME+2*ANIM_GAP);
 				}
 				setTimeout(() => {
 					nextPhase();

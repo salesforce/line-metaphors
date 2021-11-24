@@ -88,7 +88,7 @@
 	{:else}
 		<Row>
 			<Col sm="12">
-				<p>Describe what you saw in the chart above:</p>
+				<p>Describe what you see in the chart above:</p>
 			</Col>
 		</Row>
 		<Row>
