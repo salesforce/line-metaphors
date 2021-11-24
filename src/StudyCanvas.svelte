@@ -129,92 +129,24 @@
 			refdata[i].y = Math.random()*refMax;
 			focusdata[i].y = Math.random()*focusMin;
 
-			if (step.metaphor === 'converge' || i < crossI) {
+			if (i < crossI || step.metaphor === 'converge') {
 				refMax -= refSlope;
 				focusMin += focusSlope;
-			} else {
+			} else if (step.metaphor !== 'converge') {
 				refMax += refSlope;
 				focusMin -= focusSlope;
-			}
-		}
-		
-		if (step.metaphor === 'converge' || step.metaphor === 'diverge') {
-			for (let i = 0; i < NUMPOINTS+1; i += 1) {
-				refdata[i].y += 51+i*(40/(NUMPOINTS+1));
-				focusdata[i].y += 49+i*(40/(NUMPOINTS+1));
-			}
-		} else { // cross
-			for (let i = 0; i < NUMPOINTS+1; i += 1) {
-					refdata[i].y += 51+i*(40/(NUMPOINTS+1));
-					focusdata[i].y += 49+i*(40/(NUMPOINTS+1));
-				if (i < crossI) {
-					refdata[i].y = 100-refdata[i].y;
-					focusdata[i].y = 100-focusdata[i].y;
+				if (step.metaphor === 'cross') {
+					const t = refdata[i].y;
+					refdata[i].y = focusdata[i].y;
+					focusdata[i].y = t;
 				}
 			}
 		}
-
-
-		// let max = (step.metaphor === 'approach' || step.metaphor === 'coverge')  ? 80 : 100;
 		
-		// if (step.metaphor === 'cross') {
-		// 	const offset = 50+Math.random()*40;
-		// 	refdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
-		// 		return {
-		// 			x: i*100/NUMPOINTS,
-		// 			y: Math.max(0, Math.min(offset+10-Math.random()*20, 100))
-		// 		};
-		// 	});
-
-		// 	let crossed = false;
-		// 	for (let i = 0; i < NUMPOINTS+1; i += 1) {
-		// 		do {
-		// 			focusdata[i].y = Math.max(0, Math.min(i*(max/NUMPOINTS)+20-Math.random()*40, max));
-		// 		} while (crossed && focusdata[i].y <= refdata[i].y);
-		// 		crossed = (focusdata[i].y >= refdata[i].y);
-		// 	}
-		// } else {
-		// 	const offset = 20+Math.random()*30;
-		// 	// console.log(`offset: ${offset}`);
-		// 	const slope = (100-offset)/100;
-		// 	refdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
-		// 		return {
-		// 			x: i*100/NUMPOINTS,
-		// 			y: Math.max(0, Math.min(offset+(i*100/NUMPOINTS)*slope+10-Math.random()*20, 100))
-		// 		};
-		// 	});
-		// 	let minDist = 20;
-		// 	let maxDist = 50;
-
-		// 	if (step.metaphor === 'converge') {
-		// 		let minDistSlope = minDist/12;
-		// 		let maxDistSlope = maxDist/12;
-		// 		for (let i = 0; i < NUMPOINTS+1; i += 1) {
-		// 			focusdata[i].y = Math.max(0, refdata[i].y-minDist-Math.random()*(maxDist-minDist));
-		// 			minDist -= minDistSlope;
-		// 			maxDist -= maxDistSlope;
-		// 		}
-		// 	} else {
-		// 		let touchIndex = 5+Math.floor(Math.random()*3);
-		// 		let minDistSlope = minDist/(touchIndex+1);
-		// 		let maxDistSlope = maxDist/(touchIndex+1);
-		// 		for (let i = 0; i < touchIndex; i += 1) {
-		// 			focusdata[i].y = Math.max(0, refdata[i].y-minDist-Math.random()*(maxDist-minDist));
-		// 			minDist -= minDistSlope;
-		// 			maxDist -= maxDistSlope;
-		// 		}
-		// 		minDistSlope = minDist/(NUMPOINTS-touchIndex);
-		// 		maxDistSlope = maxDist/(NUMPOINTS-touchIndex);
-		// 		minDist += minDistSlope;
-		// 		maxDist += maxDistSlope;
-		// 		for (let i = touchIndex; i < NUMPOINTS+1; i += 1) {
-		// 			focusdata[i].y = Math.max(0, refdata[i].y-minDist-Math.random()*(maxDist-minDist));
-		// 			minDist += minDistSlope;
-		// 			maxDist += maxDistSlope;
-		// 		}
-
-		// 	}
-		// }
+		for (let i = 0; i < NUMPOINTS+1; i += 1) {
+			refdata[i].y += 51+i*(40/(NUMPOINTS+1));
+			focusdata[i].y += 49+i*(40/(NUMPOINTS+1));
+		}
 
 		step.refdata = refdata.slice();
 		step.focusdata = focusdata.slice();
