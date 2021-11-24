@@ -40,6 +40,7 @@
 	 * Phases:
 	 * 0 ... waiting for "ready"
 	 * 1 ... show stimulus
+	 * 2 ... noise or wait
 	 * 2 ... recreate or wait
 	 */
 	let phase = 0;
@@ -71,6 +72,15 @@
 				}, PRESENTATIONTIME);
 			break;
 			case 2:
+				if (drawAfter) {
+					setTimeout(() => {
+						nextPhase();
+					}, 500);
+				} else {
+					nextPhase();
+				}
+				break;
+			case 3:
 				drawMode = drawAfter;
 				step.time = new Date();
 				dispatch('renderDone');
@@ -116,7 +126,7 @@
 			}
 		} else {
 			const offset = 20+Math.random()*30;
-			console.log(`offset: ${offset}`);
+			// console.log(`offset: ${offset}`);
 			const slope = (100-offset)/100;
 			refdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
 				return {
@@ -144,6 +154,10 @@
 					minDist -= minDistSlope;
 					maxDist -= maxDistSlope;
 				}
+				minDistSlope = minDist/(NUMPOINTS-touchIndex);
+				maxDistSlope = maxDist/(NUMPOINTS-touchIndex);
+				minDist += minDistSlope;
+				maxDist += maxDistSlope;
 				for (let i = touchIndex; i < NUMPOINTS+1; i += 1) {
 					focusdata[i].y = Math.max(0, refdata[i].y-minDist-Math.random()*(maxDist-minDist));
 					minDist += minDistSlope;
@@ -152,6 +166,9 @@
 
 			}
 		}
+
+		step.refdata = refdata.slice();
+		step.focusdata = focusdata.slice();
 
 		userdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
 			return {
@@ -239,16 +256,20 @@
 		<text x={SVGWIDTH/2} y={SVGHEIGHT/2+8} class="button">Ready</text>
 	{/if}
 
-	{#if phase === 1 || (phase === 2 && !clear)}
+	{#if phase === 2}
+		<image href="white-noise.png" x="0" y="0" width={SVGWIDTH} height={SVGHEIGHT} preserveAspectRatio="none" />
+	{/if}
+
+	{#if phase === 1 || (phase === 3 && !clear)}
 		<path d={makePath(refdata)} class="reference" />
 		{#if step.style !== 'points' || phase === 2}
 			<path d={makePath(phase === 1 ? focusdata : userdata)} pathLength=100 class="focus"
 				style={`stroke-dasharray:100;stroke-dashoffset:${$lineLength};`}
 				marker-end={(step.style === 'arrow' && phase === 1) ? 'url(#arrowhead)' : ''}/>
 		{/if}
-		{#if step.style === 'points' || phase === 2}
-			{#each (phase === 2 ? userdata : focusdata) as p, i}
-				{#if i <= $points || phase === 2}
+		{#if step.style === 'points' || phase === 3}
+			{#each (phase === 3 ? userdata : focusdata) as p, i}
+				{#if i <= $points || phase === 3}
 					<circle cx={xScale(p.x)} cy={yScale(p.y)} r={phase === 1 ? 5 : 3} />
 				{/if}
 			{/each}
