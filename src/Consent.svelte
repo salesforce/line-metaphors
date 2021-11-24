@@ -41,12 +41,12 @@
 			<p>Your responses to this experiment will be used only by the two named researchers to help us answer questions about chart design. Once collected, your information will be anonymized and stored on a secure server.</p>
 			<p>While there will probably be publications as a result of this study, your name or participant ID will not be used. Only group characteristics will be published.</p>
 
-		<p>
+		<!-- <p>
 			Your current Prolific ID is being recorded as <span id="prolificid" style="font-weight: bold;">{prolificID}</span>.
 		</p>
 		<p>
 			Please double-check that this is correct. Your Prolific ID should be visible on your profile page.
-		</p>
+		</p> -->
 		<p>
 			By clicking "I Agree", you acknowledge that you have read and understood this consent form.
 		</p>

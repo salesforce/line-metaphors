@@ -11,7 +11,7 @@
 
 	const metaphors = ['converge', 'diverge', 'cross'] //, 'approach', 'converge']; //  'diverge',
 	const styles = ['plain', 'arrow', 'animate']; // 'points'
-	const repeats = 1;
+	const repeats = 3;
 
 	const ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -54,8 +54,7 @@
 			return results[1];
 	}
 
-	const prolificID = gup('PROLIFIC_PID') || 'TEST_'+[...new Array(5)].map(v => ALPHA[Math.floor(Math.random()*26)]).join('');
-	const studyID = gup('STUDY_ID') || 'UNKNOWN';
+	const prolificID = gup('PROLIFIC_PID').substr(-6) || 'X'+[...new Array(5)].map(v => ALPHA[Math.floor(Math.random()*26)]).join('');
 
 	function post(message) {
 		if (DEBUG)
@@ -90,6 +89,11 @@
 	}
 	shuffle(stepsA);
 	shuffle(stepsB);
+
+	// Tutorial steps
+	stepsB.unshift({metaphor: 'converge', style: 'plain', id: -1});
+	stepsB.unshift({metaphor: 'diverge', style: 'arrow', id: -1});
+	stepsB.unshift({metaphor: 'cross', style: 'animate', id: -1});
 
 	// console.log(`StudyID: ${studyID}, userID: ${prolificID}`);
 	// console.log(stepsB);
