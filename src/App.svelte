@@ -102,9 +102,9 @@
 			<Tutorial part="B" on:done={nextStage} />
 		{:else if stage === 4}
 			<Study steps={stepsB} part="B" on:done={nextStage} on:post={post} {DEBUG} />
+		<!-- {:else if stage === 5}
+			<Demographics {prolificID} on:done={nextStage} on:post={post} {DEBUG} /> -->
 		{:else if stage === 5}
-			<Demographics {prolificID} on:done={nextStage} on:post={post} {DEBUG} />
-		{:else if stage === 6}
 			<ThankYou studyCode={studyID} />
 		{/if}
 	</Container>
