@@ -30,7 +30,7 @@
 	 * 
 	 * 1000 ... Explorer
 	 */
-	let stage = 0;
+	let stage = 5;
 
 	function nextStage(message) {
 		if (Number.isInteger(message.detail)) {
@@ -110,7 +110,7 @@
 		<!-- {:else if stage === 5}
 			<Demographics {prolificID} on:done={nextStage} on:post={post} {DEBUG} /> -->
 		{:else if stage === 5}
-			<ThankYou studyCode={studyID} />
+			<ThankYou on:post={post} {prolificID} />
 		{:else if stage === 1000}
 			<Explorer />
 		{/if}
