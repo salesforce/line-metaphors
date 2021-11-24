@@ -11,7 +11,7 @@
 
 	const metaphors = ['converge', 'diverge', 'cross'] //, 'approach', 'converge']; //  'diverge',
 	const styles = ['plain', 'arrow', 'animate']; // 'points'
-	const repeats = 3;
+	const repeats = 1;
 
 	const ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -30,7 +30,7 @@
 	 * 
 	 * 1000 ... Explorer
 	 */
-	let stage = 5;
+	let stage = 0;
 
 	function nextStage(message) {
 		if (Number.isInteger(message.detail)) {
@@ -38,7 +38,7 @@
 		} else {
 			stage += 1;
 		}
-		console.log(stage);
+		// console.log(stage);
 	}
 
 	// from Michael's truncation experiment code,
@@ -60,6 +60,7 @@
 	function post(message) {
 		if (DEBUG)
 			console.log(`POST: ${JSON.stringify(message.detail)}`);
+
 		fetch(POST_URL, {
 			method: "POST",
 			headers: {'Content-Type': 'application/json'},
@@ -90,8 +91,8 @@
 	shuffle(stepsA);
 	shuffle(stepsB);
 
-	console.log(`StudyID: ${studyID}, userID: ${prolificID}`);
-	console.log(stepsB);
+	// console.log(`StudyID: ${studyID}, userID: ${prolificID}`);
+	// console.log(stepsB);
 
 </script>
 

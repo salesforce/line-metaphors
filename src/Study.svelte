@@ -108,7 +108,7 @@
 {#if phase === 1}
 	<Row>
 		<Col sm={{size: 1, offset: 5}}>
-			<Button color="secondary" disabled={!buttonActive} on:click={nextPhase}>Done</Button>
+			<Button color="secondary" disabled={!buttonActive && !DEBUG} on:click={nextPhase}>Done</Button>
 		</Col>
 		{#if DEBUG && phase === 3}
 			<Col sm={{size: 1, offset: 5}}>

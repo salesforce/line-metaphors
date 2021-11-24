@@ -14,6 +14,7 @@
 	export let userdata;
 	export let focusdata;
 	export let refdata;
+	export let DEBUG = false;
 
 	const SVGWIDTH = 600;
 	const SVGHEIGHT = 400;
@@ -117,9 +118,8 @@
 		while(reject) {
 			let refMax = 50;
 			let focusMin = -50;
-			const crossI = Math.floor(5+Math.random()*3);
-			let refSlope = (refMax-5)/(step.metaphor === 'converge' ? NUMPOINTS : crossI);
-			let focusSlope = -(focusMin+5)/(step.metaphor === 'converge' ? NUMPOINTS : crossI);
+			let refSlope = (refMax-5)/NUMPOINTS;
+			let focusSlope = -(focusMin+5)/NUMPOINTS;
 			
 			focusdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
 					return { x: i*100/NUMPOINTS, y: 0 } });
@@ -130,33 +130,45 @@
 				refdata[i].y = Math.random()*refMax;
 				focusdata[i].y = Math.random()*focusMin;
 
-				if (i < crossI || step.metaphor === 'converge') {
-					refMax -= refSlope;
-					focusMin += focusSlope;
-				} else if (step.metaphor !== 'converge') {
-					refMax += refSlope;
-					focusMin -= focusSlope;
-					if (step.metaphor === 'cross') {
-						const t = refdata[i].y;
-						refdata[i].y = focusdata[i].y;
-						focusdata[i].y = t;
-					}
-				}
+				refMax -= refSlope;
+				focusMin += focusSlope;
 			}
 			
+			if (step.metaphor === 'diverge') {
+				refdata = refdata.map((v, i) => {
+					return {
+						x: v.x,
+						y: refdata[NUMPOINTS-i].y
+				} });
+				focusdata = focusdata.map((v, i) => {
+					return {
+						x: v.x,
+						y: focusdata[NUMPOINTS-i].y
+				} });
+			}
+
+			refSlope = (step.metaphor === 'cross') ? 20 : 40;
 			for (let i = 0; i < NUMPOINTS+1; i += 1) {
-				refdata[i].y += 51+i*(40/(NUMPOINTS+1));
+				refdata[i].y += 51+i*(refSlope/(NUMPOINTS+1));
 				focusdata[i].y += 49+i*(40/(NUMPOINTS+1));
 			}
 
-			const delta = refdata[NUMPOINTS-1].y-focusdata[NUMPOINTS-1].y;
-			const delta2 = refdata[NUMPOINTS].y-focusdata[NUMPOINTS].y;
+			const refdelta = refdata[NUMPOINTS].y-refdata[NUMPOINTS-1].y;
+			const focusdelta = focusdata[NUMPOINTS].y-focusdata[NUMPOINTS-1].y;
+			// console.log(`refdelta: ${refdelta}, focusdelta: ${focusdelta}`);
 			if (step.metaphor === 'converge') {
-				reject = delta2 > delta;
+				reject = Math.sign(refdelta) > 0 || Math.sign(focusdelta) < 0;
 			} else if (step.metaphor === 'diverge') {
-				reject = delta2 < delta;
+				reject = Math.sign(refdelta) <= 0 || Math.sign(focusdelta) >= 0;
 			} else { // cross
-				reject = focusdata[NUMPOINTS-1].y >= focusdata[NUMPOINTS].y;
+				let crossings = 0;
+				for (let i = 1; i < NUMPOINTS+1; i += 1) {
+					if (Math.sign(refdata[i-1].y-focusdata[i-1].y) !== Math.sign(refdata[i].y-focusdata[i].y)) {
+						crossings += 1;
+					}
+				}
+				// console.log(crossings);
+				reject = crossings !== 1;
 			}
 		}
 
@@ -279,8 +291,8 @@
 		{/if}
 	{/if}
 
-	{#if stepNum === -1 && userdata}
-		<path d={makePath(userdata)} class="useroverlay" />
+	{#if (stepNum === -1 && userdata) || DEBUG}
+		<path d={makePath(DEBUG?focusdata:userdata)} class="useroverlay" />
 	{/if}
 </svg>
 
