@@ -9,7 +9,7 @@
 
 	export let step;
 	export let stepNum;
-	export let clear;
+	export let clear = false;
 	export let drawAfter;
 	export let userdata;
 
@@ -263,12 +263,12 @@
 	{#if phase === 1 || (phase === 3 && !clear)}
 		<path d={makePath(refdata)} class="reference" />
 		{#if step.style !== 'points' || phase === 2}
-			<path d={makePath(phase === 1 ? focusdata : userdata)} pathLength=100 class="focus"
+			<path d={makePath((phase === 1 || !drawAfter) ? focusdata : userdata)} pathLength=100 class="focus"
 				style={`stroke-dasharray:100;stroke-dashoffset:${$lineLength};`}
-				marker-end={(step.style === 'arrow' && phase === 1) ? 'url(#arrowhead)' : ''}/>
+				marker-end={(step.style === 'arrow' && (phase === 1 || (phase === 3 && !drawAfter))) ? 'url(#arrowhead)' : ''}/>
 		{/if}
-		{#if step.style === 'points' || phase === 3}
-			{#each (phase === 3 ? userdata : focusdata) as p, i}
+		{#if step.style === 'points' || (phase === 3 && drawAfter)}
+			{#each ((phase === 3 && drawAfter) ? userdata : focusdata) as p, i}
 				{#if i <= $points || phase === 3}
 					<circle cx={xScale(p.x)} cy={yScale(p.y)} r={phase === 1 ? 5 : 3} />
 				{/if}

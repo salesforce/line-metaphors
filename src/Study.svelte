@@ -32,6 +32,7 @@
 				break;
 			case 1:
 				steps[step].time = (new Date())-steps[step].time;
+				steps[step].part = part;
 				if (part === 'A') {
 					steps[step].answer = answer.slice();
 				} else {
@@ -70,7 +71,7 @@
 <Row>
 	<Col sm="12">
 		<StudyCanvas step={steps[step]} stepNum={step}
-			clear={part === 'A'} drawAfter={part === 'B'}
+			drawAfter={part === 'B'}
 			on:renderDone={nextPhase} on:redrawDone={() => buttonActive = true}
 			bind:userdata />
 	</Col>
