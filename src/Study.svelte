@@ -22,6 +22,7 @@
 	 * 0 ... show stimulus
 	 * 1 ... wait for redraw
 	 * 2 ... switch to next step
+	 * 3 ... tutorial, wait for click on "Next Step" (switches to 1)
 	 */
 	let phase = 0;
 
@@ -29,28 +30,38 @@
 		switch(phase) {
 			case 0:
 				phase = 1;
-				break;
+			break;
 			case 1:
-				steps[step].time = (new Date())-steps[step].time;
-				steps[step].part = part;
-				steps[step].step = step;
-				if (part === 'A') {
-					steps[step].answer = answer.slice();
+				if (steps[step].id === -1) {
+					phase = 3;
 				} else {
-					steps[step].userdata = userdata.slice();
+					steps[step].time = (new Date())-steps[step].time;
+					steps[step].part = part;
+					steps[step].step = step;
+					if (part === 'A') {
+						steps[step].answer = answer.slice();
+					} else {
+						steps[step].userdata = userdata.slice();
+					}
+					// console.log(steps[step]);
+					dispatch('post', steps[step]);
+					step += 1;
+					buttonActive = false;
+					answer = '';
+					if (step < steps.length) {
+						console.log(`Step ${step}`);
+						phase = 0;
+					} else {
+						dispatch('done');
+						console.log('Done');
+					}
 				}
-				// console.log(steps[step]);
-				dispatch('post', steps[step]);
+			break;
+			case 3:
 				step += 1;
+				phase = 0;
 				buttonActive = false;
-				answer = '';
-				if (step < steps.length) {
-					console.log(`Step ${step}`);
-					phase = 0;
-				} else {
-					dispatch('done');
-					console.log('Done');
-				}			
+			break;
 		}
 	}
 
@@ -72,12 +83,18 @@
 <Row>
 	<Col sm="12">
 		<StudyCanvas step={steps[step]} stepNum={step}
-			drawAfter={part === 'B'}
+			drawAfter={part === 'B'} showFocus={phase === 3}
 			on:renderDone={nextPhase} on:redrawDone={() => buttonActive = true}
 			bind:userdata />
 	</Col>
 </Row>
-{#if phase === 1 }
+{#if steps[step].id === -1}
+	<Row>
+		<Col sm={{size: 10, offset: 1}}><p><i>For the first three steps of this part, you will be shown the original chart for reference once you are done drawing yours.</i></p>
+		</Col>
+	</Row>
+{/if}
+{#if phase === 1 || phase === 3}
 	{#if part === 'B'}
 		<Row>
 			<Col sm={{size: 10, offset: 1}}>
@@ -105,14 +122,14 @@
 		</Row>
 	{/if}
 {/if}
-{#if phase === 1}
+{#if phase === 1 || phase === 3}
 	<Row>
 		<Col sm={{size: 1, offset: 5}}>
 			<Button color="secondary" disabled={!buttonActive && !DEBUG} on:click={nextPhase}>Done</Button>
 		</Col>
-		{#if DEBUG && phase === 3}
-			<Col sm={{size: 1, offset: 5}}>
-				<Button color="secondary" outline on:click={savePoints}>Save Points</Button>
+		{#if steps[step].id === -1 && phase === 3}
+			<Col sm={{size: 3, offset: 1}}>
+				<Button color="primary" on:click={nextPhase}>Next Step</Button>
 			</Col>
 		{/if}
 	</Row>

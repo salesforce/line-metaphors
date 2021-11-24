@@ -5,7 +5,7 @@
 
 	const dispatch = createEventDispatcher();
 
-	export let prolificID;
+	// export let prolificID;
 	export let DEBUG = false;
 
 	function done(next) {

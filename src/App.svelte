@@ -91,9 +91,9 @@
 	shuffle(stepsB);
 
 	// Tutorial steps
-	stepsB.unshift({metaphor: 'converge', style: 'plain', id: -1});
-	stepsB.unshift({metaphor: 'diverge', style: 'arrow', id: -1});
 	stepsB.unshift({metaphor: 'cross', style: 'animate', id: -1});
+	stepsB.unshift({metaphor: 'diverge', style: 'arrow', id: -1});
+	stepsB.unshift({metaphor: 'converge', style: 'plain', id: -1});
 
 	// console.log(`StudyID: ${studyID}, userID: ${prolificID}`);
 	// console.log(stepsB);
@@ -103,7 +103,7 @@
 <main>
 	<Container>
 		{#if stage === 0}
-			<Consent {prolificID} on:done={nextStage} {DEBUG} />
+			<Consent on:done={nextStage} {DEBUG} />
 		{:else if stage === 1}
 			<Tutorial part="A" on:done={nextStage} />
 		{:else if stage === 2}

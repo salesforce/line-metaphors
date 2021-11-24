@@ -15,6 +15,7 @@
 	export let focusdata;
 	export let refdata;
 	export let DEBUG = false;
+	export let showFocus = false;
 
 	const SVGWIDTH = 600;
 	const SVGHEIGHT = 400;
@@ -112,7 +113,7 @@
 		hover = false;
 		isDown = false;
 
-		console.log(step);
+		// console.log(step);
 
 		let reject = true;
 		while(reject) {
@@ -264,6 +265,10 @@
 	<line x1={14} y1={14} x2={8} y2={24} />
 	<text transform="rotate(-90)" x={-68} y={12} class="axis">Sales</text>
 
+	{#if showFocus}
+		<path d={makePath(focusdata)} class="focuslighter" />
+	{/if}
+
 	{#if phase === 0}
 		<rect x={2*SVGWIDTH/5} y={2*SVGHEIGHT/5} width={SVGWIDTH/5} height={SVGHEIGHT/5} rx="10"
 			class="button" class:hover
@@ -349,6 +354,10 @@
 
 	.useroverlay {
 		stroke: purple;
+	}
+
+	.focuslighter {
+		stroke: lightsteelblue;
 	}
 
 	svg {
