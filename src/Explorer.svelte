@@ -46,7 +46,13 @@
 				.orderby('step')
 				.objects();
 			
-			console.log(steps);
+			// console.log(steps);
+		}
+	}
+
+	$: {
+		if (currentID) {
+			step = 0;
 		}
 	}
 
@@ -84,7 +90,7 @@
 	</Row>
 	<Row>
 		<Col>
-			<StudyCanvas step={{style: 'line', metaphor: 'cross'}} stepNum={-1}
+			<StudyCanvas step={{style: 'line', metaphor: 'cross'}} stepNum={-1} drawAfter={false}
 				userdata={steps[step].userdata} refdata={steps[step].refdata} focusdata={steps[step].focusdata} />
 		</Col>
 	</Row>

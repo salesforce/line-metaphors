@@ -217,6 +217,8 @@
 			prepareStep(stepNum);
 		} else { // explorer
 			phase = 1;
+			const max = Math.max(...refdata.map(v => v.y), ...focusdata.map(v => v.y));
+			yScale = scaleLinear([0, max], [SVGHEIGHT-1.5*PADDING, PADDING]);
 			
 		}
 	}
@@ -276,6 +278,10 @@
 			{/each}
 		{/if}
 	{/if}
+
+	{#if stepNum === -1 && userdata}
+		<path d={makePath(userdata)} class="useroverlay" />
+	{/if}
 </svg>
 
 <style>
@@ -327,6 +333,10 @@
 
 	.reference {
 		stroke: darkgray;
+	}
+
+	.useroverlay {
+		stroke: purple;
 	}
 
 	svg {
