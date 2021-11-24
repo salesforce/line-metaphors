@@ -23,7 +23,7 @@
 			}
 		}
 
-		aq = from(results, ['id', 'part', 'step', 'metaphor', 'style', 'answer', 'refdata', 'focusdata', 'userdata']);
+		aq = from(results, ['id', 'part', 'step', 'metaphor', 'style', 'answer', 'time', 'refdata', 'focusdata', 'userdata']);
 
 		IDs = aq.select('id')
 			.groupby('id')
@@ -32,8 +32,6 @@
 			.map(d => d.id);
 		
 		currentID = IDs[0];
-
-		console.log(IDs);
 
 	});
 
@@ -85,7 +83,7 @@
 </Row>
 {#if steps.length > 0}
 	<Row>
-		<Col>{steps[step].id}, {steps[step].part}, {steps[step].step || step+1}, {steps[step].metaphor}, {steps[step].style}
+		<Col>{steps[step].id}, {steps[step].part}, {steps[step].step || step+1}, {steps[step].metaphor}, {steps[step].style} &mdash; {(steps[step].time/1000).toFixed(1)}s
 		</Col>
 	</Row>
 	<Row>
