@@ -118,7 +118,7 @@
 	</Row>
 {/if}
 	<Row>
-		<Col sm="12">Part {part}, Step {step+1}/{steps.length}
+		<Col sm="12">Part {part==='A'?'1 (Description)':'2 (Reconstruction)'}, Step {step+1}/{steps.length}
 		</Col>
 	</Row>
 

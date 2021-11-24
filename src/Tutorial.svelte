@@ -17,7 +17,7 @@
 
 <Row>
 	<Col sm="12">
-		<h1>Tutorial for Part {part}</h1>
+		<h1>Tutorial for Part {part==='A'?1:2}</h1>
 		{#if part === 'A'}
 			<p>In the first part of the study, you will be shown charts about sales of two products in a fictional company, <i>Product A</i> and <i>Product B</i>. You will then be asked to describe each chart in a few sentences.
 				Please try to be specific about patterns and details you observe.</p>
