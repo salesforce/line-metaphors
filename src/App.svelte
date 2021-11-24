@@ -14,7 +14,7 @@
 
 	const ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-	const DEBUG = true;
+	const DEBUG = false;
 
 	const POST_URL = '/post.php';
 
@@ -57,11 +57,13 @@
 	function post(message) {
 		if (DEBUG)
 			console.log(`POST: ${JSON.stringify(message.detail)}`);
-		// fetch(POST_URL, {
-		// 	method: "POST",
-		// 	headers: {'Content-Type': 'application/json'},
-		// 	body: JSON.stringify(message.detail)
-		// });
+		fetch(POST_URL, {
+			method: "POST",
+			headers: {'Content-Type': 'application/json'},
+			body: JSON.stringify(message.detail)
+		}).then(response => {
+			if (DEBUG) console.log(response);
+		});
 	}
 
 	let stepsA = [];
@@ -70,8 +72,8 @@
 		for (let s of styles) {
 			stepsA.push({
 				metaphor:	m,
-					style:		s,
-					id:			prolificID
+				style:		s,
+				id:			prolificID
 			});
 			for (let i = 0; i < repeats; i += 1) {
 				stepsB.push({
