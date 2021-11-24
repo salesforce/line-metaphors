@@ -97,7 +97,7 @@
 	}
 
 	const xScale = scaleLinear([0, 100], [PADDING, SVGWIDTH-3*PADDING]);
-	const yScale = scaleLinear([0, 100], [SVGHEIGHT-1.5*PADDING, 3*PADDING]);
+	let yScale = scaleLinear([0, 105], [SVGHEIGHT-1.5*PADDING, 3*PADDING]);
 
 	let focusdata;
 	let refdata;
@@ -160,6 +160,9 @@
 			}
 		}
 
+		const max = Math.max(...refdata.map(v => v.y), ...focusdata.map(v => v.y));
+		yScale = scaleLinear([0, max], [SVGHEIGHT-1.5*PADDING, PADDING]);
+
 		step.refdata = refdata.slice();
 		step.focusdata = focusdata.slice();
 
@@ -218,7 +221,7 @@
 <svg width={SVGWIDTH} height={SVGHEIGHT}>
 	<defs>
 		<marker id="arrowhead" markerWidth="10" markerHeight="7" 
-				refX="0" refY="3.5" orient="auto">
+				refX="8" refY="3.5" orient="auto">
 			<polygon points="0 0, 10 3.5, 0 7" fill="steelblue" />
 		</marker>
 	</defs>
