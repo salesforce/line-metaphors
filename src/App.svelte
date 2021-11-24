@@ -10,8 +10,7 @@
 
 	const metaphors = ['converge', 'diverge', 'cross'] //, 'approach', 'converge']; //  'diverge',
 	const styles = ['plain', 'arrow', 'animate']; // 'points'
-	// const metaphors = ['converge']; //  'diverge',
-	// const styles = ['points'];
+	const repeats = 3;
 
 	const ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -56,30 +55,38 @@
 	const studyID = gup('STUDY_ID') || 'UNKNOWN';
 
 	function post(message) {
-		console.log(`POST: ${JSON.stringify(message.detail)}`);
+		if (DEBUG)
+			console.log(`POST: ${JSON.stringify(message.detail)}`);
 		// fetch(POST_URL, {
 		// 	method: "POST",
 		// 	headers: {'Content-Type': 'application/json'},
 		// 	body: JSON.stringify(message.detail)
 		// });
 	}
-	
-	let steps = [];
 
+	let stepsA = [];
+	let stepsB = [];
 	for (let m of metaphors) {
 		for (let s of styles) {
-			steps.push({
+			stepsA.push({
 				metaphor:	m,
-				style:		s,
-				id:			prolificID
+					style:		s,
+					id:			prolificID
 			});
+			for (let i = 0; i < repeats; i += 1) {
+				stepsB.push({
+					metaphor:	m,
+					style:		s,
+					id:			prolificID
+				});
+			}
 		}
 	}
-
-	shuffle(steps);
+	shuffle(stepsA);
+	shuffle(stepsB);
 
 	console.log(`StudyID: ${studyID}, userID: ${prolificID}`);
-	console.log(steps);
+	console.log(stepsB);
 
 </script>
 
@@ -90,11 +97,11 @@
 		{:else if stage === 1}
 			<Tutorial part="A" on:done={nextStage} />
 		{:else if stage === 2}
-			<Study {steps} part="A" on:done={nextStage} on:post={post} {DEBUG} />
+			<Study steps={stepsA} part="A" on:done={nextStage} on:post={post} {DEBUG} />
 		{:else if stage === 3}
 			<Tutorial part="B" on:done={nextStage} />
 		{:else if stage === 4}
-			<Study {steps} part="B" on:done={nextStage} on:post={post} {DEBUG} />
+			<Study steps={stepsB} part="B" on:done={nextStage} on:post={post} {DEBUG} />
 		{:else if stage === 5}
 			<Demographics {prolificID} on:done={nextStage} on:post={post} {DEBUG} />
 		{:else if stage === 6}
