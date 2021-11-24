@@ -41,7 +41,7 @@
 	 * 0 ... waiting for "ready"
 	 * 1 ... show stimulus
 	 * 2 ... noise or wait
-	 * 2 ... recreate or wait
+	 * 3 ... recreate or wait
 	 */
 	let phase = 0;
 
@@ -109,71 +109,112 @@
 		phase = 0;
 		stepDone = false;
 		hover = false;
+		isDown = false;
 
 		console.log(step);
 
-		let max = (step.metaphor === 'approach' || step.metaphor === 'coverge')  ? 80 : 100;
+		let refMax = 50;
+		let focusMin = -50;
+		const crossI = Math.floor(5+Math.random()*3);
+		console.log(`crossI = ${crossI}`);
+		let refSlope = (refMax-5)/(step.metaphor === 'converge' ? NUMPOINTS : crossI);
+		let focusSlope = -(focusMin+5)/(step.metaphor === 'converge' ? NUMPOINTS : crossI);
+		
 		focusdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
 				return { x: i*100/NUMPOINTS, y: 0 } });
-		
-		if (step.metaphor === 'cross') {
-			const offset = 50+Math.random()*40;
-			refdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
-				return {
-					x: i*100/NUMPOINTS,
-					y: Math.max(0, Math.min(offset+10-Math.random()*20, 100))
-				};
-			});
+		refdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
+				return { x: i*100/NUMPOINTS, y: 0 } });
 
-			let crossed = false;
-			for (let i = 0; i < NUMPOINTS+1; i += 1) {
-				do {
-					focusdata[i].y = Math.max(0, Math.min(i*(max/NUMPOINTS)+20-Math.random()*40, max));
-				} while (crossed && focusdata[i].y <= refdata[i].y);
-				crossed = (focusdata[i].y >= refdata[i].y);
-			}
-		} else {
-			const offset = 20+Math.random()*30;
-			// console.log(`offset: ${offset}`);
-			const slope = (100-offset)/100;
-			refdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
-				return {
-					x: i*100/NUMPOINTS,
-					y: Math.max(0, Math.min(offset+(i*100/NUMPOINTS)*slope+10-Math.random()*20, 100))
-				};
-			});
-			let minDist = 20;
-			let maxDist = 50;
+		for (let i = 0; i < NUMPOINTS+1; i += 1) {
+			refdata[i].y = Math.random()*refMax;
+			focusdata[i].y = Math.random()*focusMin;
 
-			if (step.metaphor === 'converge') {
-				let minDistSlope = minDist/12;
-				let maxDistSlope = maxDist/12;
-				for (let i = 0; i < NUMPOINTS+1; i += 1) {
-					focusdata[i].y = Math.max(0, refdata[i].y-minDist-Math.random()*(maxDist-minDist));
-					minDist -= minDistSlope;
-					maxDist -= maxDistSlope;
-				}
+			if (step.metaphor === 'converge' || i < crossI) {
+				refMax -= refSlope;
+				focusMin += focusSlope;
 			} else {
-				let touchIndex = 5+Math.floor(Math.random()*3);
-				let minDistSlope = minDist/(touchIndex+1);
-				let maxDistSlope = maxDist/(touchIndex+1);
-				for (let i = 0; i < touchIndex; i += 1) {
-					focusdata[i].y = Math.max(0, refdata[i].y-minDist-Math.random()*(maxDist-minDist));
-					minDist -= minDistSlope;
-					maxDist -= maxDistSlope;
-				}
-				minDistSlope = minDist/(NUMPOINTS-touchIndex);
-				maxDistSlope = maxDist/(NUMPOINTS-touchIndex);
-				minDist += minDistSlope;
-				maxDist += maxDistSlope;
-				for (let i = touchIndex; i < NUMPOINTS+1; i += 1) {
-					focusdata[i].y = Math.max(0, refdata[i].y-minDist-Math.random()*(maxDist-minDist));
-					minDist += minDistSlope;
-					maxDist += maxDistSlope;
-				}
-
+				refMax += refSlope;
+				focusMin -= focusSlope;
 			}
 		}
+		
+		if (step.metaphor === 'converge' || step.metaphor === 'diverge') {
+			for (let i = 0; i < NUMPOINTS+1; i += 1) {
+				refdata[i].y += 51+i*(40/(NUMPOINTS+1));
+				focusdata[i].y += 49+i*(40/(NUMPOINTS+1));
+			}
+		} else { // cross
+			for (let i = 0; i < NUMPOINTS+1; i += 1) {
+					refdata[i].y += 51+i*(40/(NUMPOINTS+1));
+					focusdata[i].y += 49+i*(40/(NUMPOINTS+1));
+				if (i < crossI) {
+					refdata[i].y = 100-refdata[i].y;
+					focusdata[i].y = 100-focusdata[i].y;
+				}
+			}
+		}
+
+
+		// let max = (step.metaphor === 'approach' || step.metaphor === 'coverge')  ? 80 : 100;
+		
+		// if (step.metaphor === 'cross') {
+		// 	const offset = 50+Math.random()*40;
+		// 	refdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
+		// 		return {
+		// 			x: i*100/NUMPOINTS,
+		// 			y: Math.max(0, Math.min(offset+10-Math.random()*20, 100))
+		// 		};
+		// 	});
+
+		// 	let crossed = false;
+		// 	for (let i = 0; i < NUMPOINTS+1; i += 1) {
+		// 		do {
+		// 			focusdata[i].y = Math.max(0, Math.min(i*(max/NUMPOINTS)+20-Math.random()*40, max));
+		// 		} while (crossed && focusdata[i].y <= refdata[i].y);
+		// 		crossed = (focusdata[i].y >= refdata[i].y);
+		// 	}
+		// } else {
+		// 	const offset = 20+Math.random()*30;
+		// 	// console.log(`offset: ${offset}`);
+		// 	const slope = (100-offset)/100;
+		// 	refdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
+		// 		return {
+		// 			x: i*100/NUMPOINTS,
+		// 			y: Math.max(0, Math.min(offset+(i*100/NUMPOINTS)*slope+10-Math.random()*20, 100))
+		// 		};
+		// 	});
+		// 	let minDist = 20;
+		// 	let maxDist = 50;
+
+		// 	if (step.metaphor === 'converge') {
+		// 		let minDistSlope = minDist/12;
+		// 		let maxDistSlope = maxDist/12;
+		// 		for (let i = 0; i < NUMPOINTS+1; i += 1) {
+		// 			focusdata[i].y = Math.max(0, refdata[i].y-minDist-Math.random()*(maxDist-minDist));
+		// 			minDist -= minDistSlope;
+		// 			maxDist -= maxDistSlope;
+		// 		}
+		// 	} else {
+		// 		let touchIndex = 5+Math.floor(Math.random()*3);
+		// 		let minDistSlope = minDist/(touchIndex+1);
+		// 		let maxDistSlope = maxDist/(touchIndex+1);
+		// 		for (let i = 0; i < touchIndex; i += 1) {
+		// 			focusdata[i].y = Math.max(0, refdata[i].y-minDist-Math.random()*(maxDist-minDist));
+		// 			minDist -= minDistSlope;
+		// 			maxDist -= maxDistSlope;
+		// 		}
+		// 		minDistSlope = minDist/(NUMPOINTS-touchIndex);
+		// 		maxDistSlope = maxDist/(NUMPOINTS-touchIndex);
+		// 		minDist += minDistSlope;
+		// 		maxDist += maxDistSlope;
+		// 		for (let i = touchIndex; i < NUMPOINTS+1; i += 1) {
+		// 			focusdata[i].y = Math.max(0, refdata[i].y-minDist-Math.random()*(maxDist-minDist));
+		// 			minDist += minDistSlope;
+		// 			maxDist += maxDistSlope;
+		// 		}
+
+		// 	}
+		// }
 
 		step.refdata = refdata.slice();
 		step.focusdata = focusdata.slice();
@@ -207,7 +248,7 @@
 	let drawMode = false;
 
 	function mouseDown(e) {
-		if (drawMode) {
+		if (drawMode && phase === 3) {
 			isDown = true;
 			setDataPoint(e);
 		}
