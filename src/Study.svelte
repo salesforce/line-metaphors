@@ -33,6 +33,7 @@
 			case 1:
 				steps[step].time = (new Date())-steps[step].time;
 				steps[step].part = part;
+				steps[step].step = step;
 				if (part === 'A') {
 					steps[step].answer = answer.slice();
 				} else {
