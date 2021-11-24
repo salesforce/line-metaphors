@@ -38,7 +38,7 @@
 </Row>
 <Row>
 	<Col sm={{size: 5, offset: 3}}>
-		<Button color="success" href={`https://app.prolific.co/submissions/complete?cc=`}>Finish Study</Button>
+		<Button color="success" href={`https://app.prolific.co/submissions/complete?cc=4FA51EDE`}>Finish Study</Button>
 	</Col>
 </Row>
 

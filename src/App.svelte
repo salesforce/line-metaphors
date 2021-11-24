@@ -20,13 +20,13 @@
 	const POST_URL = '/post.php';
 
 	/**
-	 * 0 ... consent
+	 * 0 ... Consent
 	 * 1 ... Tutorial for Part A
 	 * 2 ... Study, Part A
 	 * 3 ... Tutorial for Part B
 	 * 4 ... Study, Part B
-	 * 5 ... Demographics
-	 * 6 ... Thank You!
+	 * (5 ... Demographics)
+	 * 5 ... Thank You!
 	 * 
 	 * 1000 ... Explorer
 	 */
