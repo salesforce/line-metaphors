@@ -16,8 +16,8 @@
 
 {#if DEBUG}
 <Row>
-	<Col><Button on:click={() => done(2)}>Part A</Button><Button on:click={() => done(4)}>Part B</Button>
-	</Col>
+	<Col><Button on:click={() => done(2)}>Part A</Button></Col><Col><Button on:click={() => done(4)}>Part B</Button></Col>
+	<Col><Button color="warning" on:click={() => done(1000)}>Explorer</Button></Col>
 </Row>
 {/if}
 <Row>

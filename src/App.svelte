@@ -4,6 +4,7 @@
 	import Study from './Study.svelte';
 	import Demographics from './Demographics.svelte';
 	import ThankYou from './ThankYou.svelte';
+	import Explorer from './Explorer.svelte';
 
 	import { Container } from 'sveltestrap';
 	import { shuffle } from 'd3-array';
@@ -14,7 +15,7 @@
 
 	const ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-	const DEBUG = false;
+	const DEBUG = true;
 
 	const POST_URL = '/post.php';
 
@@ -26,6 +27,8 @@
 	 * 4 ... Study, Part B
 	 * 5 ... Demographics
 	 * 6 ... Thank You!
+	 * 
+	 * 1000 ... Explorer
 	 */
 	let stage = 0;
 
@@ -108,6 +111,8 @@
 			<Demographics {prolificID} on:done={nextStage} on:post={post} {DEBUG} /> -->
 		{:else if stage === 5}
 			<ThankYou studyCode={studyID} />
+		{:else if stage === 1000}
+			<Explorer />
 		{/if}
 	</Container>
 </main>

@@ -12,6 +12,8 @@
 	export let clear = false;
 	export let drawAfter;
 	export let userdata;
+	export let focusdata;
+	export let refdata;
 
 	const SVGWIDTH = 600;
 	const SVGHEIGHT = 400;
@@ -99,8 +101,6 @@
 	const xScale = scaleLinear([0, 100], [PADDING, SVGWIDTH-3*PADDING]);
 	let yScale = scaleLinear([0, 105], [SVGHEIGHT-1.5*PADDING, 3*PADDING]);
 
-	let focusdata;
-	let refdata;
 	let yZeros = 100;
 	let stepDone = false;
 
@@ -213,7 +213,12 @@
 	}
 
 	$: {
-		prepareStep(stepNum);
+		if (stepNum >= 0) {
+			prepareStep(stepNum);
+		} else { // explorer
+			phase = 1;
+			
+		}
 	}
 
 </script>
