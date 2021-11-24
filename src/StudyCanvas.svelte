@@ -113,39 +113,51 @@
 
 		console.log(step);
 
-		let refMax = 50;
-		let focusMin = -50;
-		const crossI = Math.floor(5+Math.random()*3);
-		console.log(`crossI = ${crossI}`);
-		let refSlope = (refMax-5)/(step.metaphor === 'converge' ? NUMPOINTS : crossI);
-		let focusSlope = -(focusMin+5)/(step.metaphor === 'converge' ? NUMPOINTS : crossI);
-		
-		focusdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
-				return { x: i*100/NUMPOINTS, y: 0 } });
-		refdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
-				return { x: i*100/NUMPOINTS, y: 0 } });
+		let reject = true;
+		while(reject) {
+			let refMax = 50;
+			let focusMin = -50;
+			const crossI = Math.floor(5+Math.random()*3);
+			let refSlope = (refMax-5)/(step.metaphor === 'converge' ? NUMPOINTS : crossI);
+			let focusSlope = -(focusMin+5)/(step.metaphor === 'converge' ? NUMPOINTS : crossI);
+			
+			focusdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
+					return { x: i*100/NUMPOINTS, y: 0 } });
+			refdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
+					return { x: i*100/NUMPOINTS, y: 0 } });
 
-		for (let i = 0; i < NUMPOINTS+1; i += 1) {
-			refdata[i].y = Math.random()*refMax;
-			focusdata[i].y = Math.random()*focusMin;
+			for (let i = 0; i < NUMPOINTS+1; i += 1) {
+				refdata[i].y = Math.random()*refMax;
+				focusdata[i].y = Math.random()*focusMin;
 
-			if (i < crossI || step.metaphor === 'converge') {
-				refMax -= refSlope;
-				focusMin += focusSlope;
-			} else if (step.metaphor !== 'converge') {
-				refMax += refSlope;
-				focusMin -= focusSlope;
-				if (step.metaphor === 'cross') {
-					const t = refdata[i].y;
-					refdata[i].y = focusdata[i].y;
-					focusdata[i].y = t;
+				if (i < crossI || step.metaphor === 'converge') {
+					refMax -= refSlope;
+					focusMin += focusSlope;
+				} else if (step.metaphor !== 'converge') {
+					refMax += refSlope;
+					focusMin -= focusSlope;
+					if (step.metaphor === 'cross') {
+						const t = refdata[i].y;
+						refdata[i].y = focusdata[i].y;
+						focusdata[i].y = t;
+					}
 				}
 			}
-		}
-		
-		for (let i = 0; i < NUMPOINTS+1; i += 1) {
-			refdata[i].y += 51+i*(40/(NUMPOINTS+1));
-			focusdata[i].y += 49+i*(40/(NUMPOINTS+1));
+			
+			for (let i = 0; i < NUMPOINTS+1; i += 1) {
+				refdata[i].y += 51+i*(40/(NUMPOINTS+1));
+				focusdata[i].y += 49+i*(40/(NUMPOINTS+1));
+			}
+
+			const delta = refdata[NUMPOINTS-1].y-focusdata[NUMPOINTS-1].y;
+			const delta2 = refdata[NUMPOINTS].y-focusdata[NUMPOINTS].y;
+			if (step.metaphor === 'converge') {
+				reject = delta2 > delta;
+			} else if (step.metaphor === 'diverge') {
+				reject = delta2 < delta;
+			} else { // cross
+				reject = focusdata[NUMPOINTS-1].y >= focusdata[NUMPOINTS].y;
+			}
 		}
 
 		step.refdata = refdata.slice();
