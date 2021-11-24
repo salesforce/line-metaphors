@@ -29,6 +29,7 @@
 			</p>
 			<p>You will need to move all of the points in the chart in order to be able to advance to the next question.</p>
 		{/if}
+		<p>Do not reload this page or use the browser navigation buttons! You will lose your place in the study and start from the beginning.</p>
 		<StudyCanvas step={{metaphor: 'approach', style: 'line'}} stepNum={1}
 			drawAfter={part === 'B'}
 			on:renderDone={nextStep} on:redrawDone={nextStep} />
