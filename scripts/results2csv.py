@@ -20,7 +20,7 @@ results = []
 for line in f.readlines():
 	results.append(json.loads(line))
 
-results.sort(key=lambda v: v['id'][:6] + '-' + v['part'])
+results.sort(key=lambda v: v['id'][-6:] + '-' + v['part'])
 
 partA = []
 partB = []
@@ -29,7 +29,7 @@ previousID = ''
 previousPart = 'X'
 step = 0
 for r in results:
-	id = r['id'][:6]
+	id = r['id'][-6:]
 	if id != previousID or r['part'] != previousPart:
 		step = 1
 	else:

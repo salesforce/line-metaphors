@@ -19,7 +19,9 @@
 		const data = await res.text();
 		for (let line of data.split('\n')) {
 			if (line.length > 0) {
-				results.push(JSON.parse(line));
+				let d = JSON.parse(line);
+				d.id = d.id.substr(d.id.length-6);
+				results.push(d);
 			}
 		}
 
@@ -28,6 +30,7 @@
 		IDs = aq.select('id')
 			.groupby('id')
 			.rollup({id: op.any('id')})
+			.orderby('id')
 			.objects()
 			.map(d => d.id);
 		
