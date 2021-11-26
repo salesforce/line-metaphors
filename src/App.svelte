@@ -74,7 +74,7 @@
 	json('stimuli-partA.json').then(data => {
 		stepsA = data;
 		for (let i = 0; i < stepsA.length; i += 1) {
-			stepsA.id = prolificID;
+			stepsA[i].id = prolificID;
 		}
 		shuffle(stepsA);
 	});
@@ -83,7 +83,7 @@
 	json('stimuli-partB.json').then(data => {
 		stepsB = data;
 		for (let i = 0; i < stepsB.length; i += 1) {
-			stepsB.id = prolificID;
+			stepsB[i].id = prolificID;
 		}
 		shuffle(stepsB);
 		// Tutorial steps
