@@ -261,13 +261,13 @@
 	<line x1={PADDING} y1={SVGHEIGHT-PADDING} x2={SVGWIDTH-14} y2={SVGHEIGHT-PADDING} class="axis" />
 	<line x1={PADDING} y1={1} x2={PADDING} y2={SVGHEIGHT-PADDING}  class="axis" />
 
-	<line x1={SVGWIDTH-12} y1={SVGHEIGHT-PADDING/2-14} x2={SVGWIDTH-22} y2={SVGHEIGHT-PADDING/2-20} class="axis" />
-	<line x1={SVGWIDTH-12} y1={SVGHEIGHT-PADDING/2-14} x2={SVGWIDTH-22} y2={SVGHEIGHT-PADDING/2-8} class="axis" />
+	<line x1={SVGWIDTH-12} y1={SVGHEIGHT-PADDING} x2={SVGWIDTH-22} y2={SVGHEIGHT-PADDING-6} class="axis" />
+	<line x1={SVGWIDTH-12} y1={SVGHEIGHT-PADDING} x2={SVGWIDTH-22} y2={SVGHEIGHT-PADDING+6} class="axis" />
 	{#each xScale.ticks() as tick }
 		<line x1={xScale(tick)} y1={SVGHEIGHT-PADDING/2-9} x2={xScale(tick)} y2={SVGHEIGHT-PADDING/2-14} class="tick" />
 		<text x={xScale(tick)} y={SVGHEIGHT-PADDING/2-2} class="ticklabel">{tick/10+2010}</text>
 	{/each}
-	<text x={SVGWIDTH-50} y={SVGHEIGHT-8} class="axis">Time</text>
+	<text x={SVGWIDTH-53} y={SVGHEIGHT-14} class="axis">Time</text>
 
 	<line x1={PADDING} y1={1} x2={PADDING+6} y2={15} class="axis" />
 	<line x1={PADDING} y1={1} x2={PADDING-6} y2={15} class="axis" />
@@ -275,13 +275,13 @@
 		<line x1={PADDING-5} y1={yScale(tick)} x2={PADDING} y2={yScale(tick)} class="tick" />
 		<text x={PADDING-12} y={yScale(tick)+3} class="ticklabel">{tick}</text>
 	{/each}
-	<text transform="rotate(-90)" x={-56} y={PADDING-3} class="axis">Sales</text>
+	<text transform="rotate(-90)" x={-54} y={PADDING-3} class="axis">Sales</text>
 
-	<line x1={SVGWIDTH/4-PADDING/2} y1={SVGHEIGHT-PADDING/4} x2={SVGWIDTH/4+PADDING/2} y2={SVGHEIGHT-PADDING/4} class="focus"  />
-	<text x={SVGWIDTH/4+PADDING/2+2} y={SVGHEIGHT-1} class="axis">Product A</text>
+	<line x1={SVGWIDTH/4-PADDING/2} y1={SVGHEIGHT-PADDING/4+2} x2={SVGWIDTH/4+PADDING/2} y2={SVGHEIGHT-PADDING/4+2} class="focus"  />
+	<text x={SVGWIDTH/4+PADDING/2+2} y={SVGHEIGHT-1} class="product">Product A</text>
 
-	<line x1={SVGWIDTH/2-PADDING/2} y1={SVGHEIGHT-PADDING/4} x2={SVGWIDTH/2+PADDING/2} y2={SVGHEIGHT-PADDING/4} class="reference"  />
-	<text x={SVGWIDTH/2+PADDING/2+2} y={SVGHEIGHT-1} class="axis">Product B</text>
+	<line x1={SVGWIDTH/2-PADDING/2} y1={SVGHEIGHT-PADDING/4+2} x2={SVGWIDTH/2+PADDING/2} y2={SVGHEIGHT-PADDING/4+2} class="reference"  />
+	<text x={SVGWIDTH/2+PADDING/2+2} y={SVGHEIGHT-1} class="product">Product B</text>
 
 	{#if showFocus}
 		<path d={makePath(focusdata)} class="focuslighter" />
@@ -341,7 +341,12 @@
 	}
 
 	text.axis {
-		font-size: 12pt;
+		font-size: 10pt;
+		fill: darkgray;
+	}
+
+	text.product {
+		font-size: 10pt;
 	}
 
 	line {
