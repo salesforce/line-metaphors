@@ -73,12 +73,18 @@
 	let stepsA = [];
 	json('stimuli-partA.json').then(data => {
 		stepsA = data;
+		for (let i = 0; i < stepsA.length; i += 1) {
+			stepsA.id = prolificID;
+		}
 		shuffle(stepsA);
 	});
 
 	let stepsB = [];
 	json('stimuli-partB.json').then(data => {
 		stepsB = data;
+		for (let i = 0; i < stepsB.length; i += 1) {
+			stepsB.id = prolificID;
+		}
 		shuffle(stepsB);
 		// Tutorial steps
 		stepsB.unshift({metaphor: 'cross', style: 'animate', id: -1});

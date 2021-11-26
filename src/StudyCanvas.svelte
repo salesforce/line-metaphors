@@ -117,7 +117,7 @@
 		if (step.stepID) { // preloaded data
 			refdata = step.refdata.slice();
 			focusdata = step.focusdata.slice();
-			console.log(`preloaded ${step.stepID}`);
+			// console.log(`preloaded ${step.stepID}`);
 		} else { // generate
 			let reject = true;
 			while(reject) {
@@ -183,7 +183,7 @@
 			step.refdata = refdata.slice();
 			step.focusdata = focusdata.slice();
 			step.stepID = `${step.metaphor}-${step.style}-${stepNum % 3}`;
-			console.log(step.stepID);
+			// console.log(step.stepID);
 		}
 
 		const max = Math.max(...refdata.map(v => v.y), ...focusdata.map(v => v.y));
