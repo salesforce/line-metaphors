@@ -112,13 +112,12 @@
 		stepDone = false;
 		hover = false;
 		isDown = false;
-
 		// console.log(step);
 
 		let reject = true;
 		while(reject) {
-			let refMax = 50;
-			let focusMin = -50;
+			let refMax = 30;
+			let focusMin = -30;
 			let refSlope = (refMax-5)/NUMPOINTS;
 			let focusSlope = -(focusMin+5)/NUMPOINTS;
 			
@@ -135,6 +134,12 @@
 				focusMin += focusSlope;
 			}
 			
+			refSlope = (step.metaphor === 'cross') ? 20 : 40;
+			for (let i = 0; i < NUMPOINTS+1; i += 1) {
+				refdata[i].y += 51+i*(refSlope/(NUMPOINTS+1));
+				focusdata[i].y += 30+i*(60/(NUMPOINTS+1));
+			}
+
 			if (step.metaphor === 'diverge') {
 				refdata = refdata.map((v, i) => {
 					return {
@@ -146,12 +151,6 @@
 						x: v.x,
 						y: focusdata[NUMPOINTS-i].y
 				} });
-			}
-
-			refSlope = (step.metaphor === 'cross') ? 20 : 40;
-			for (let i = 0; i < NUMPOINTS+1; i += 1) {
-				refdata[i].y += 51+i*(refSlope/(NUMPOINTS+1));
-				focusdata[i].y += 49+i*(40/(NUMPOINTS+1));
 			}
 
 			const refdelta = refdata[NUMPOINTS].y-refdata[NUMPOINTS-1].y;
@@ -167,6 +166,9 @@
 					if (Math.sign(refdata[i-1].y-focusdata[i-1].y) !== Math.sign(refdata[i].y-focusdata[i].y)) {
 						crossings += 1;
 					}
+					if (Math.abs(refdata[i].y-focusdata[i].y) < 5) {
+						crossings += 1; // near-crossings
+					}
 				}
 				// console.log(crossings);
 				reject = crossings !== 1;
@@ -178,6 +180,8 @@
 
 		step.refdata = refdata.slice();
 		step.focusdata = focusdata.slice();
+		step.stepID = `${step.metaphor}-${step.style}-${stepNum % 3}`;
+		console.log(step.stepID);
 
 		userdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
 			return {
@@ -227,7 +231,7 @@
 
 	$: {
 		if (stepNum >= 0) {
-			prepareStep(stepNum);
+			prepareStep();
 		} else { // explorer
 			phase = 1;
 			const max = Math.max(...refdata.map(v => v.y), ...focusdata.map(v => v.y));

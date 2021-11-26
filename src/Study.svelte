@@ -45,10 +45,10 @@
 					}
 					// console.log(steps[step]);
 					dispatch('post', steps[step]);
-					step += 1;
 					buttonActive = false;
 					answer = '';
-					if (step < steps.length) {
+					if (step < steps.length-1) {
+						step += 1;
 						console.log(`Step ${step}`);
 						phase = 0;
 					} else {
@@ -65,13 +65,17 @@
 		}
 	}
 
-	function savePoints() {
-		console.log(JSON.stringify(userdata.map(d => {
+	function exportSteps() {
+		const stimuli = steps.map(s => {
 			return {
-				x: d.x,
-				y: d.y.toFixed(2)
-			}
-		})));
+				part:		s.part,
+				stepID:		s.stepID,
+				metaphor:	s.metaphor,
+				style:		s.style,
+				refdata:	s.refdata,
+				focusdata:	s.focusdata
+			} } );
+		console.log(JSON.stringify(stimuli));
 	}
 
 	$: {
@@ -82,7 +86,7 @@
 
 <Row>
 	<Col sm="12">
-		<StudyCanvas step={steps[step]} stepNum={step}
+		<StudyCanvas step={steps[step]} stepNum={step} {DEBUG}
 			drawAfter={part === 'B'} showFocus={phase === 3}
 			on:renderDone={nextPhase} on:redrawDone={() => buttonActive = true}
 			bind:userdata />
@@ -131,6 +135,9 @@
 			<Col sm={{size: 3, offset: 1}}>
 				<Button color="primary" on:click={nextPhase}>Next Step</Button>
 			</Col>
+		{/if}
+		{#if DEBUG}
+			<Col><Button outline on:click={exportSteps}>Export Stimuli</Button></Col>
 		{/if}
 	</Row>
 {/if}

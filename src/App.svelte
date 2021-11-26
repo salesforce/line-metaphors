@@ -8,6 +8,7 @@
 
 	import { Container } from 'sveltestrap';
 	import { shuffle } from 'd3-array';
+	import { json } from 'd3-fetch';
 
 	const metaphors = ['converge', 'diverge', 'cross'] //, 'approach', 'converge']; //  'diverge',
 	const styles = ['plain', 'arrow', 'animate']; // 'points'
@@ -70,25 +71,36 @@
 	}
 
 	let stepsA = [];
+	json('stimuli-partA.json').then(data => {
+		stepsA = data;
+		shuffle(stepsA);
+	});
+
 	let stepsB = [];
-	for (let m of metaphors) {
-		for (let s of styles) {
-			stepsA.push({
-				metaphor:	m,
-				style:		s,
-				id:			prolificID
-			});
-			for (let i = 0; i < repeats; i += 1) {
-				stepsB.push({
-					metaphor:	m,
-					style:		s,
-					id:			prolificID
-				});
-			}
-		}
-	}
-	shuffle(stepsA);
-	shuffle(stepsB);
+	json('stimuli-partB.json').then(data => {
+		stepsB = data;
+		shuffle(stepsB);
+	});
+
+	// for (let m of metaphors) {
+	// 	for (let s of styles) {
+	// 		stepsA.push({
+	// 			metaphor:	m,
+	// 			style:		s,
+	// 			id:			prolificID
+	// 		});
+	// 		for (let i = 0; i < repeats; i += 1) {
+	// 			stepsB.push({
+	// 				metaphor:	m,
+	// 				style:		s,
+	// 				id:			prolificID
+	// 			});
+	// 		}
+	// 	}
+	// }
+	// comment out for step generation so we get the correct repeat numbers
+	// shuffle(stepsA);
+	// shuffle(stepsB);
 
 	// Tutorial steps
 	stepsB.unshift({metaphor: 'cross', style: 'animate', id: -1});
