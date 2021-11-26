@@ -34,7 +34,7 @@
 		<h4><b>Are There Any Benefits To Me?</b></h4>
 		<p>There are no direct benefits to you other than compensation.</p>
 		<h4><b>Will I Be Compensated For My Participation?</b></h4>
-		<p>You will receive $4.00 for participating in this study. If you do withdraw prior to the end of the study, you will receive no compensation.</p>
+		<p>You will receive $7.50 (or equivalent) for participating in this study. If you withdraw prior to the end of the study, you will receive no compensation.</p>
 		<h4><b>Whom Should I Contact If I Have Questions?</b></h4>
 		<p>You may ask any questions about the research at any time. If you have questions about the research after your participation, you should contact the lead researcher, <a href="mailto:rkosara@tableau.com">Dr. Robert Kosara</a>. Your participation is completely voluntary. If you begin participation and change your mind you may end your participation at any time without penalty.</p>
 		<h4><b>Privacy Statement</b></h4>

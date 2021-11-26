@@ -80,6 +80,12 @@
 	json('stimuli-partB.json').then(data => {
 		stepsB = data;
 		shuffle(stepsB);
+		// Tutorial steps
+		stepsB.unshift({metaphor: 'cross', style: 'animate', id: -1});
+		stepsB.unshift({metaphor: 'diverge', style: 'arrow', id: -1});
+		stepsB.unshift({metaphor: 'converge', style: 'plain', id: -1});
+
+		stage = 4;
 	});
 
 	// for (let m of metaphors) {
@@ -101,11 +107,6 @@
 	// comment out for step generation so we get the correct repeat numbers
 	// shuffle(stepsA);
 	// shuffle(stepsB);
-
-	// Tutorial steps
-	stepsB.unshift({metaphor: 'cross', style: 'animate', id: -1});
-	stepsB.unshift({metaphor: 'diverge', style: 'arrow', id: -1});
-	stepsB.unshift({metaphor: 'converge', style: 'plain', id: -1});
 
 	// console.log(`StudyID: ${studyID}, userID: ${prolificID}`);
 	// console.log(stepsB);

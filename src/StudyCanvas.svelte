@@ -19,7 +19,7 @@
 
 	const SVGWIDTH = 600;
 	const SVGHEIGHT = 400;
-	const PADDING = 24;
+	const PADDING = 27;
 
 	const PRESENTATIONTIME = 5000;
 	const ANIM_TIME = 1000;
@@ -100,7 +100,7 @@
 		}
 	}
 
-	const xScale = scaleLinear([0, 100], [PADDING, SVGWIDTH-3*PADDING]);
+	const xScale = scaleLinear([0, 100], [PADDING*1.5, SVGWIDTH-2.5*PADDING]);
 	let yScale = scaleLinear([0, 105], [SVGHEIGHT-1.5*PADDING, 3*PADDING]);
 
 	let yZeros = 100;
@@ -114,74 +114,80 @@
 		isDown = false;
 		// console.log(step);
 
-		let reject = true;
-		while(reject) {
-			let refMax = 30;
-			let focusMin = -30;
-			let refSlope = (refMax-5)/NUMPOINTS;
-			let focusSlope = -(focusMin+5)/NUMPOINTS;
-			
-			focusdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
-					return { x: i*100/NUMPOINTS, y: 0 } });
-			refdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
-					return { x: i*100/NUMPOINTS, y: 0 } });
+		if (step.stepID) { // preloaded data
+			refdata = step.refdata.slice();
+			focusdata = step.focusdata.slice();
+			console.log(`preloaded ${step.stepID}`);
+		} else { // generate
+			let reject = true;
+			while(reject) {
+				let refMax = 30;
+				let focusMin = -30;
+				let refSlope = (refMax-5)/NUMPOINTS;
+				let focusSlope = -(focusMin+5)/NUMPOINTS;
+				
+				focusdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
+						return { x: i*100/NUMPOINTS, y: 0 } });
+				refdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
+						return { x: i*100/NUMPOINTS, y: 0 } });
 
-			for (let i = 0; i < NUMPOINTS+1; i += 1) {
-				refdata[i].y = Math.random()*refMax;
-				focusdata[i].y = Math.random()*focusMin;
+				for (let i = 0; i < NUMPOINTS+1; i += 1) {
+					refdata[i].y = Math.random()*refMax;
+					focusdata[i].y = Math.random()*focusMin;
 
-				refMax -= refSlope;
-				focusMin += focusSlope;
-			}
-			
-			refSlope = (step.metaphor === 'cross') ? 20 : 40;
-			for (let i = 0; i < NUMPOINTS+1; i += 1) {
-				refdata[i].y += 51+i*(refSlope/(NUMPOINTS+1));
-				focusdata[i].y += 30+i*(60/(NUMPOINTS+1));
-			}
-
-			if (step.metaphor === 'diverge') {
-				refdata = refdata.map((v, i) => {
-					return {
-						x: v.x,
-						y: refdata[NUMPOINTS-i].y
-				} });
-				focusdata = focusdata.map((v, i) => {
-					return {
-						x: v.x,
-						y: focusdata[NUMPOINTS-i].y
-				} });
-			}
-
-			const refdelta = refdata[NUMPOINTS].y-refdata[NUMPOINTS-1].y;
-			const focusdelta = focusdata[NUMPOINTS].y-focusdata[NUMPOINTS-1].y;
-			// console.log(`refdelta: ${refdelta}, focusdelta: ${focusdelta}`);
-			if (step.metaphor === 'converge') {
-				reject = Math.sign(refdelta) > 0 || Math.sign(focusdelta) < 0;
-			} else if (step.metaphor === 'diverge') {
-				reject = Math.sign(refdelta) <= 0 || Math.sign(focusdelta) >= 0;
-			} else { // cross
-				let crossings = 0;
-				for (let i = 1; i < NUMPOINTS+1; i += 1) {
-					if (Math.sign(refdata[i-1].y-focusdata[i-1].y) !== Math.sign(refdata[i].y-focusdata[i].y)) {
-						crossings += 1;
-					}
-					if (Math.abs(refdata[i].y-focusdata[i].y) < 5) {
-						crossings += 1; // near-crossings
-					}
+					refMax -= refSlope;
+					focusMin += focusSlope;
 				}
-				// console.log(crossings);
-				reject = crossings !== 1;
+				
+				refSlope = (step.metaphor === 'cross') ? 20 : 40;
+				for (let i = 0; i < NUMPOINTS+1; i += 1) {
+					refdata[i].y += 51+i*(refSlope/(NUMPOINTS+1));
+					focusdata[i].y += 30+i*(60/(NUMPOINTS+1));
+				}
+
+				if (step.metaphor === 'diverge') {
+					refdata = refdata.map((v, i) => {
+						return {
+							x: v.x,
+							y: refdata[NUMPOINTS-i].y
+					} });
+					focusdata = focusdata.map((v, i) => {
+						return {
+							x: v.x,
+							y: focusdata[NUMPOINTS-i].y
+					} });
+				}
+
+				const refdelta = refdata[NUMPOINTS].y-refdata[NUMPOINTS-1].y;
+				const focusdelta = focusdata[NUMPOINTS].y-focusdata[NUMPOINTS-1].y;
+				// console.log(`refdelta: ${refdelta}, focusdelta: ${focusdelta}`);
+				if (step.metaphor === 'converge') {
+					reject = Math.sign(refdelta) > 0 || Math.sign(focusdelta) < 0;
+				} else if (step.metaphor === 'diverge') {
+					reject = Math.sign(refdelta) <= 0 || Math.sign(focusdelta) >= 0;
+				} else { // cross
+					let crossings = 0;
+					for (let i = 1; i < NUMPOINTS+1; i += 1) {
+						if (Math.sign(refdata[i-1].y-focusdata[i-1].y) !== Math.sign(refdata[i].y-focusdata[i].y)) {
+							crossings += 1;
+						}
+						if (Math.abs(refdata[i].y-focusdata[i].y) < 5) {
+							crossings += 1; // near-crossings
+						}
+					}
+					// console.log(crossings);
+					reject = crossings !== 1;
+				}
 			}
+
+			step.refdata = refdata.slice();
+			step.focusdata = focusdata.slice();
+			step.stepID = `${step.metaphor}-${step.style}-${stepNum % 3}`;
+			console.log(step.stepID);
 		}
 
 		const max = Math.max(...refdata.map(v => v.y), ...focusdata.map(v => v.y));
-		yScale = scaleLinear([0, max], [SVGHEIGHT-1.5*PADDING, PADDING]);
-
-		step.refdata = refdata.slice();
-		step.focusdata = focusdata.slice();
-		step.stepID = `${step.metaphor}-${step.style}-${stepNum % 3}`;
-		console.log(step.stepID);
+		yScale = scaleLinear([0, max], [SVGHEIGHT-PADDING, PADDING]);
 
 		userdata = [...new Array(NUMPOINTS+1)].map((v, i) => {
 			return {
@@ -252,22 +258,30 @@
 	<rect x=0 y=0 width={SVGWIDTH} height={SVGHEIGHT} style={"fill:white;"}
 		on:mousedown={mouseDown} on:mouseup={mouseUp} on:mouseleave={mouseUp}
 		on:mousemove={mouseMove} />
-	<line x1={14} y1={SVGHEIGHT-PADDING/2-14} x2={SVGWIDTH-14} y2={SVGHEIGHT-PADDING/2-14} />
-	<line x1={14} y1={14} x2={14} y2={SVGHEIGHT-PADDING/2-14} />
+	<line x1={PADDING} y1={SVGHEIGHT-PADDING} x2={SVGWIDTH-14} y2={SVGHEIGHT-PADDING} class="axis" />
+	<line x1={PADDING} y1={1} x2={PADDING} y2={SVGHEIGHT-PADDING}  class="axis" />
 
-	<line x1={SVGWIDTH-12} y1={SVGHEIGHT-PADDING/2-14} x2={SVGWIDTH-22} y2={SVGHEIGHT-PADDING/2-20} />
-	<line x1={SVGWIDTH-12} y1={SVGHEIGHT-PADDING/2-14} x2={SVGWIDTH-22} y2={SVGHEIGHT-PADDING/2-8} />
-	<text x={SVGWIDTH-63} y={SVGHEIGHT-8} class="axis">Time</text>
+	<line x1={SVGWIDTH-12} y1={SVGHEIGHT-PADDING/2-14} x2={SVGWIDTH-22} y2={SVGHEIGHT-PADDING/2-20} class="axis" />
+	<line x1={SVGWIDTH-12} y1={SVGHEIGHT-PADDING/2-14} x2={SVGWIDTH-22} y2={SVGHEIGHT-PADDING/2-8} class="axis" />
+	{#each xScale.ticks() as tick }
+		<line x1={xScale(tick)} y1={SVGHEIGHT-PADDING/2-9} x2={xScale(tick)} y2={SVGHEIGHT-PADDING/2-14} class="tick" />
+		<text x={xScale(tick)} y={SVGHEIGHT-PADDING/2-2} class="ticklabel">{tick/10+2010}</text>
+	{/each}
+	<text x={SVGWIDTH-50} y={SVGHEIGHT-8} class="axis">Time</text>
+
+	<line x1={PADDING} y1={1} x2={PADDING+6} y2={15} class="axis" />
+	<line x1={PADDING} y1={1} x2={PADDING-6} y2={15} class="axis" />
+	{#each yScale.ticks() as tick }
+		<line x1={PADDING-5} y1={yScale(tick)} x2={PADDING} y2={yScale(tick)} class="tick" />
+		<text x={PADDING-12} y={yScale(tick)+3} class="ticklabel">{tick}</text>
+	{/each}
+	<text transform="rotate(-90)" x={-56} y={PADDING-3} class="axis">Sales</text>
 
 	<line x1={SVGWIDTH/4-PADDING/2} y1={SVGHEIGHT-PADDING/4} x2={SVGWIDTH/4+PADDING/2} y2={SVGHEIGHT-PADDING/4} class="focus"  />
 	<text x={SVGWIDTH/4+PADDING/2+2} y={SVGHEIGHT-1} class="axis">Product A</text>
 
 	<line x1={SVGWIDTH/2-PADDING/2} y1={SVGHEIGHT-PADDING/4} x2={SVGWIDTH/2+PADDING/2} y2={SVGHEIGHT-PADDING/4} class="reference"  />
 	<text x={SVGWIDTH/2+PADDING/2+2} y={SVGHEIGHT-1} class="axis">Product B</text>
-
-	<line x1={14} y1={14} x2={20} y2={24} />
-	<line x1={14} y1={14} x2={8} y2={24} />
-	<text transform="rotate(-90)" x={-68} y={12} class="axis">Sales</text>
 
 	{#if showFocus}
 		<path d={makePath(focusdata)} class="focuslighter" />
@@ -300,7 +314,7 @@
 		{/if}
 	{/if}
 
-	{#if (stepNum === -1 && userdata) || DEBUG}
+	{#if (stepNum === -1 && userdata)}
 		<path d={makePath(DEBUG?focusdata:userdata)} class="useroverlay" />
 	{/if}
 </svg>
@@ -348,12 +362,26 @@
 		pointer-events: none;
 	}
 
+	line.axis, .tick {
+		stroke: darkgray;
+	}
+
+	.tick {
+		stroke-width: 1px;
+	}
+
+	.ticklabel {
+		text-anchor: middle;
+		font-size: 8px;
+		fill: darkgray;
+	}
+
 	.focus {
 		stroke: steelblue;
 	}
 
 	.reference {
-		stroke: darkgray;
+		stroke: lightgray;
 	}
 
 	.useroverlay {
