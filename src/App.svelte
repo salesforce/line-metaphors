@@ -85,7 +85,7 @@
 		stepsB.unshift({metaphor: 'diverge', style: 'arrow', id: -1});
 		stepsB.unshift({metaphor: 'converge', style: 'plain', id: -1});
 
-		stage = 4;
+		// stage = 4;
 	});
 
 	// for (let m of metaphors) {
