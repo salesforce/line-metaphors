@@ -71,6 +71,10 @@
 		}
 	}
 
+	function exportSVG() {
+		console.log(document.getElementsByTagName('svg')[0].outerHTML);
+	}
+
 	$: {
 		if (resultsTable) {
 			steps = resultsTable
@@ -193,8 +197,12 @@
 {/if}
 <Row>
 	<Col>
-		<br><br><br>
+		<br>
 		<Button outline on:click={() => dispatch('back')}>Back to Study</Button>
+	</Col>
+	<Col>
+		<br>
+		<Button outline color="success" on:click={exportSVG}>Copy SVG</Button>
 	</Col>
 </Row>
 

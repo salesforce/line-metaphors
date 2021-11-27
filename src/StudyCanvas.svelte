@@ -249,6 +249,84 @@
 </script>
 
 <svg width={SVGWIDTH} height={SVGHEIGHT}>
+	<style>
+		rect.button {
+			fill: #408458;
+		}
+
+		rect.button.hover {
+			fill: #36704B;
+		}
+
+		text {
+			user-select: none;
+		}
+
+		text.button {
+			fill: white;
+			font-size: 20pt;
+			font-weight: bold;
+			text-anchor: middle;
+			pointer-events: none;
+		}
+
+		text.axis {
+			font-size: 10pt;
+			fill: darkgray;
+		}
+
+		text.product {
+			font-size: 10pt;
+		}
+
+		line {
+			stroke: black;
+			stroke-width: 2px;
+			pointer-events: none;
+		}
+
+		path {
+			stroke-width: 2px;
+			fill: none;
+			pointer-events: none;
+		}
+
+		circle {
+			fill: steelblue;
+			stroke: none;
+			pointer-events: none;
+		}
+
+		line.axis, .tick {
+			stroke: darkgray;
+		}
+
+		.tick {
+			stroke-width: 1px;
+		}
+
+		.ticklabel {
+			text-anchor: middle;
+			font-size: 8px;
+			fill: darkgray;
+		}
+
+		.focus {
+			stroke: steelblue;
+		}
+
+		.reference {
+			stroke: lightgray;
+		}
+
+		.useroverlay {
+			stroke: rgba(128, 0, 128, .5);
+		}
+
+		.focuslighter {
+			stroke: lightsteelblue;
+		}
+	</style>
 	<defs>
 		<marker id="arrowhead" markerWidth="10" markerHeight="7" 
 				refX="8" refY="3.5" orient="auto">
@@ -258,30 +336,36 @@
 	<rect x=0 y=0 width={SVGWIDTH} height={SVGHEIGHT} style={"fill:white;"}
 		on:mousedown={mouseDown} on:mouseup={mouseUp} on:mouseleave={mouseUp}
 		on:mousemove={mouseMove} />
-	<line x1={PADDING} y1={SVGHEIGHT-PADDING} x2={SVGWIDTH-14} y2={SVGHEIGHT-PADDING} class="axis" />
-	<line x1={PADDING} y1={1} x2={PADDING} y2={SVGHEIGHT-PADDING}  class="axis" />
+	<line x1={PADDING} y1={SVGHEIGHT-PADDING} x2={SVGWIDTH-14} y2={SVGHEIGHT-PADDING} class="axis" style="stroke: darkgray;" />
+	<line x1={PADDING} y1={1} x2={PADDING} y2={SVGHEIGHT-PADDING}  class="axis" style="stroke: darkgray;" />
 
-	<line x1={SVGWIDTH-12} y1={SVGHEIGHT-PADDING} x2={SVGWIDTH-22} y2={SVGHEIGHT-PADDING-6} class="axis" />
-	<line x1={SVGWIDTH-12} y1={SVGHEIGHT-PADDING} x2={SVGWIDTH-22} y2={SVGHEIGHT-PADDING+6} class="axis" />
+	<line x1={SVGWIDTH-12} y1={SVGHEIGHT-PADDING} x2={SVGWIDTH-22} y2={SVGHEIGHT-PADDING-6} class="axis" style="stroke: darkgray;" />
+	<line x1={SVGWIDTH-12} y1={SVGHEIGHT-PADDING} x2={SVGWIDTH-22} y2={SVGHEIGHT-PADDING+6} class="axis" style="stroke: darkgray;" />
 	{#each xScale.ticks() as tick }
-		<line x1={xScale(tick)} y1={SVGHEIGHT-PADDING/2-9} x2={xScale(tick)} y2={SVGHEIGHT-PADDING/2-14} class="tick" />
+		<line x1={xScale(tick)} y1={SVGHEIGHT-PADDING/2-9} x2={xScale(tick)} y2={SVGHEIGHT-PADDING/2-14} class="tick" style="stroke: darkgray;" />
 		<text x={xScale(tick)} y={SVGHEIGHT-PADDING/2-2} class="ticklabel">{tick/10+2010}</text>
 	{/each}
-	<text x={SVGWIDTH-53} y={SVGHEIGHT-14} class="axis">Time</text>
+	<text x={SVGWIDTH-53} y={SVGHEIGHT-14} class="axis"  style="fill:darkgray;font-size:10pt;">Time</text>
 
-	<line x1={PADDING} y1={1} x2={PADDING+6} y2={15} class="axis" />
-	<line x1={PADDING} y1={1} x2={PADDING-6} y2={15} class="axis" />
+	<line x1={PADDING} y1={1} x2={PADDING+6} y2={15} class="axis" style="stroke: darkgray;" />
+	<line x1={PADDING} y1={1} x2={PADDING-6} y2={15} class="axis" style="stroke: darkgray;" />
 	{#each yScale.ticks() as tick }
-		<line x1={PADDING-5} y1={yScale(tick)} x2={PADDING} y2={yScale(tick)} class="tick" />
+		<line x1={PADDING-5} y1={yScale(tick)} x2={PADDING} y2={yScale(tick)} class="tick" style="stroke: darkgray;" />
 		<text x={PADDING-12} y={yScale(tick)+3} class="ticklabel">{tick}</text>
 	{/each}
-	<text transform="rotate(-90)" x={-54} y={PADDING-3} class="axis">Sales</text>
+	<text transform="rotate(-90)" x={-54} y={PADDING-3} class="axis" style="fill:darkgray;font-size:10pt;">Sales</text>
 
-	<line x1={SVGWIDTH/4-PADDING/2} y1={SVGHEIGHT-PADDING/4+2} x2={SVGWIDTH/4+PADDING/2} y2={SVGHEIGHT-PADDING/4+2} class="focus"  />
+	<line x1={SVGWIDTH/4-PADDING/2} y1={SVGHEIGHT-PADDING/4+2} x2={SVGWIDTH/4+PADDING/2} y2={SVGHEIGHT-PADDING/4+2} class="focus" style="stroke: darkgray;" />
 	<text x={SVGWIDTH/4+PADDING/2+2} y={SVGHEIGHT-1} class="product">Product A</text>
 
-	<line x1={SVGWIDTH/2-PADDING/2} y1={SVGHEIGHT-PADDING/4+2} x2={SVGWIDTH/2+PADDING/2} y2={SVGHEIGHT-PADDING/4+2} class="reference"  />
+	<line x1={SVGWIDTH/2-PADDING/2} y1={SVGHEIGHT-PADDING/4+2} x2={SVGWIDTH/2+PADDING/2} y2={SVGHEIGHT-PADDING/4+2} class="reference" style="stroke: darkgray;" />
 	<text x={SVGWIDTH/2+PADDING/2+2} y={SVGHEIGHT-1} class="product">Product B</text>
+
+	{#if (stepNum === -1 && userdata)}
+		{#each userdata as ud}
+			<path d={makePath(ud)} class="useroverlay" />
+		{/each}
+	{/if}
 
 	{#if showFocus}
 		<path d={makePath(focusdata)} class="focuslighter" />
@@ -314,92 +398,9 @@
 		{/if}
 	{/if}
 
-	{#if (stepNum === -1 && userdata)}
-		{#each userdata as ud}
-			<path d={makePath(ud)} class="useroverlay" />
-		{/each}
-	{/if}
 </svg>
 
 <style>
-	rect.button {
-		fill: #408458;
-	}
-
-	rect.button.hover {
-		fill: #36704B;
-	}
-
-	text {
-		user-select: none;
-	}
-
-	text.button {
-		fill: white;
-		font-size: 20pt;
-		font-weight: bold;
-		text-anchor: middle;
-		pointer-events: none;
-	}
-
-	text.axis {
-		font-size: 10pt;
-		fill: darkgray;
-	}
-
-	text.product {
-		font-size: 10pt;
-	}
-
-	line {
-		stroke: black;
-		stroke-width: 2px;
-		pointer-events: none;
-	}
-
-	path {
-		stroke-width: 2px;
-		fill: none;
-		pointer-events: none;
-	}
-
-	circle {
-		fill: steelblue;
-		stroke: none;
-		pointer-events: none;
-	}
-
-	line.axis, .tick {
-		stroke: darkgray;
-	}
-
-	.tick {
-		stroke-width: 1px;
-	}
-
-	.ticklabel {
-		text-anchor: middle;
-		font-size: 8px;
-		fill: darkgray;
-	}
-
-	.focus {
-		stroke: steelblue;
-	}
-
-	.reference {
-		stroke: lightgray;
-	}
-
-	.useroverlay {
-		stroke: purple;
-		opacity: 50%;
-	}
-
-	.focuslighter {
-		stroke: lightsteelblue;
-	}
-
 	svg {
 		margin-bottom: 1em;
 	}
