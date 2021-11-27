@@ -31,7 +31,7 @@
 	 * 
 	 * 1000 ... Explorer
 	 */
-	let stage = 0;
+	let stage = 1000;
 
 	function nextStage(message) {
 		if (Number.isInteger(message.detail)) {
@@ -136,7 +136,7 @@
 		{:else if stage === 5}
 			<ThankYou on:post={post} {prolificID} />
 		{:else if stage === 1000}
-			<Explorer />
+			<Explorer on:back={() => stage = 0} />
 		{/if}
 	</Container>
 </main>

@@ -315,7 +315,9 @@
 	{/if}
 
 	{#if (stepNum === -1 && userdata)}
-		<path d={makePath(DEBUG?focusdata:userdata)} class="useroverlay" />
+		{#each userdata as ud}
+			<path d={makePath(ud)} class="useroverlay" />
+		{/each}
 	{/if}
 </svg>
 
@@ -391,6 +393,7 @@
 
 	.useroverlay {
 		stroke: purple;
+		opacity: 50%;
 	}
 
 	.focuslighter {
