@@ -138,7 +138,8 @@
 				{/each}
 			</Input>
 		</Col>
-		<Col sm={2}>
+		<Col>
+			<Button disabled={step === 0} outline on:click={() => step = 0}>Reset</Button>
 		</Col>
 		<Col>
 			<Button disabled={step === stepIDs.length-1} on:click={() => step += 1}>Next</Button>
