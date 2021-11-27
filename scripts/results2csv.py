@@ -7,15 +7,17 @@ from csv import DictWriter
 
 FIELDNAMES = ['id', 'part', 'step', 'metaphor', 'style', 'time']
 
+PHASE = 'main' # 'pilot'
+
 def writeCSV(data, part, extrafields):
-	with open('pilot-results-' + part + '.csv', 'w') as outFile:
+	with open(PHASE + '-results-' + part + '.csv', 'w') as outFile:
 		writer = DictWriter(outFile, FIELDNAMES + extrafields)
 
 		writer.writeheader();
 		writer.writerows(data);
 
 
-f = open('public/data/pilot-results.csv')
+f = open('public/data/main-results.jsonl')
 results = []
 for line in f.readlines():
 	results.append(json.loads(line))
