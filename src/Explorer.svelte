@@ -1,7 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
 	import { from, op } from 'arquero';
-	import { Row, Col, Input, Button } from 'sveltestrap';
+	import { Row, Col, Input, Button, FormGroup } from 'sveltestrap';
 	import StudyCanvas from './StudyCanvas.svelte';
 
 	let results = [];
@@ -14,8 +14,10 @@
 	let steps = [];
 	let step = 0;
 
-	onMount(async () => {
-		const res = await fetch('/data/pilot-results.csv');
+	let pilotOrMain = 'pilot';
+
+	async function loadData(study) {
+		const res = await fetch(`/data/${study}-results.jsonl`);
 		const data = await res.text();
 		for (let line of data.split('\n')) {
 			if (line.length > 0) {
@@ -35,7 +37,10 @@
 			.map(d => d.id);
 		
 		currentID = IDs[0];
+	}
 
+	onMount(() => {
+		loadData(pilotOrMain);
 	});
 
 	$: {
@@ -51,6 +56,8 @@
 		}
 	}
 
+	$: loadData(pilotOrMain);
+
 	$: {
 		if (currentID) {
 			step = 0;
@@ -60,17 +67,29 @@
 </script>
 
 <Row>
+	<Col sm="2">
+		<Input id="r1" type="radio"
+			bind:group={pilotOrMain} value="pilot" label="Pilot"
+		/>
+	</Col>
+	<Col sm="2">
+		<Input id="r2" type="radio"
+			bind:group={pilotOrMain} value="main" label="Main"
+		/>
+	</Col>
+</Row>
+<Row>
+	<Col sm={3}>
+		<Input type="select" name="part" bind:value={part}>
+			<option value="A">Part A</option>
+			<option value="B">Part B</option>
+		</Input>
+	</Col>
 	<Col sm={5}>
 		<Input type="select" name="participantID" bind:value={currentID}>
 			{#each IDs as id}
 				<option value={id}>{id}</option>
 			{/each}
-		</Input>
-	</Col>
-	<Col sm={3}>
-		<Input type="select" name="part" bind:value={part}>
-			<option value="A">Part A</option>
-			<option value="B">Part B</option>
 		</Input>
 	</Col>
 	<Col sm={2}>
