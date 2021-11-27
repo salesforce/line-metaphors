@@ -110,7 +110,7 @@
 	{:else}
 		<Row>
 			<Col sm="12">
-				<p>Describe what you see in the chart above:</p>
+				<p>Describe the behavior of the <span class="blue">blue {steps[step].style === 'points' ? 'dots' : 'line'}</span> (Product A) in the chart above:</p>
 			</Col>
 		</Row>
 		<Row>
